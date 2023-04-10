@@ -5,12 +5,12 @@
         this.pngArray = [];
         this.pngArray.push(
           loader.load(
-            "Room468/eye1.jpg"
+            "eye1.jpg"
           )
         );
         this.pngArray.push(
           loader.load(
-            "Room468/eye2.jpg"
+            "eye2.jpg"
           )
         );
 
