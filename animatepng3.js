@@ -3,13 +3,13 @@ AFRAME.registerComponent("animate-png3", {
     // load the .pngs
     let loader = new THREE.TextureLoader();
     this.pngArray = [];
-    this.pngArray.push(loader.load("Room468/layout1.png"));
-    this.pngArray.push(loader.load("Room468/layout2.png"));
-    this.pngArray.push(loader.load("Room468/layout3.png"));
-    this.pngArray.push(loader.load("Room468/layout4.png"));
-    this.pngArray.push(loader.load("Room468/layout5.png"));
-    this.pngArray.push(loader.load("Room468/layout6.png"));
-    this.pngArray.push(loader.load("Room468/layout7.png"));
+    this.pngArray.push(loader.load("layout1.png"));
+    this.pngArray.push(loader.load("layout2.png"));
+    this.pngArray.push(loader.load("layout3.png"));
+    this.pngArray.push(loader.load("layout4.png"));
+    this.pngArray.push(loader.load("layout5.png"));
+    this.pngArray.push(loader.load("layout6.png"));
+    this.pngArray.push(loader.load("layout7.png"));
 
     this.el.addEventListener("loaded", (e) => {
       let mesh = this.el.getObject3D("mesh");
