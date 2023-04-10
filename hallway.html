@@ -13,20 +13,7 @@
     <!--    Event Waypoint Script -->
     <script src="aframe-particle-system-component.min.js"></script>  
     <script src="aframe-event-set-component.min.js"></script>
-      
-  <!--Text Service Worker-->
-<script>
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/service-worker.js')
-      .then(registration => {
-        console.log('Service worker registered:', registration);
-      })
-      .catch(error => {
-        console.error('Service worker registration failed:', error);
-      });
-  }
-</script>
-            
+         
     
     <!-- ANIMATE PNG-->
     <script src="animatepng.js"></script>
@@ -195,7 +182,7 @@ splashScreen.addEventListener('click', () => {
         ></a-asset-item> 
         <a-asset-item
           id="gallerygeometry"
-          src="Hallway/hallwayGeometry.gltf"
+          src="hallwayGeometry.gltf"
         ></a-asset-item>
         <a-asset-item
           id="heart"
