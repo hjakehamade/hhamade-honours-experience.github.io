@@ -5,33 +5,33 @@
         this.pngArray = [];
         this.pngArray.push(
           loader.load(
-            "Room468/stars1-modified.jpg"
+            "stars1-modified.jpg"
               
           )
         );
         this.pngArray.push(
           loader.load(
-            "Room468/stars2-modified.jpg"
+            "stars2-modified.jpg"
           )
         );
         this.pngArray.push(
           loader.load(
-            "Room468/stars3-modified.jpg"
+            "stars3-modified.jpg"
           )
         );
         this.pngArray.push(
           loader.load(
-            "Room468/stars4-modified.jpg"
+            "stars4-modified.jpg"
           )
         );
         this.pngArray.push(
           loader.load(
-            "Room468/stars5-modified.jpg"
+            "stars5-modified.jpg"
           )
         );
                 this.pngArray.push(
           loader.load(
-            "Room468/stars6-modified.jpg"
+            "stars6-modified.jpg"
           )
         );
           
