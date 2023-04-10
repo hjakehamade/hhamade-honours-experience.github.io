@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <!--    Place the script for aframe here     -->
+    <script src="aframe.min.js"></script>
+    <!-- Link Clicking -->
+    <script src="aframe-href-component.min.js"></script>
+    <!--     Place the script for aframe extras here -->
+    <script src="aframe-extras.js"></script>
+    <!--     Place the script for the environment component here -->
+    <script src="aframe-environment-component.min.js"></script>
+    <!--    Event Waypoint Script -->
+    <script src="aframe-particle-system-component.min.js"></script>  
+    <script src="aframe-event-set-component.min.js"></script>
+ 
+      
+    <!-- ANIMATE PNG-->
+    <script src="animatepng.js"></script>
+      <script src="animatepng2.js"></script>
+      <script src="animatepng3.js"></script>
+    
+    <!---VERTICAL PITCH touch controls--->
+    <script>
+    
+    AFRAME.components["look-controls"].Component.prototype.onTouchMove = function (t) {
+                        var PI_2 = Math.PI/2,
+                        e,
+                        o = this.el.sceneEl.canvas,
+                        i = this.yawObject,
+                        j = this.pitchObject;
+                        this.touchStarted && this.data.touchEnabled && (e = 2 * Math.PI * (t.touches[0].pageX - this.touchStart.x) / o.clientWidth, f = 2 * Math.PI * (t.touches[0].pageY - this.touchStart.y) / o.clientHeight, j.rotation.x += .3 * f, i.rotation.y += .5 * e, j.rotation.x = Math.max(-PI_2, Math.min(PI_2, j.rotation.x)), this.touchStart = {
+                                x: t.touches[0].pageX,
+                                y: t.touches[0].pageY
+                            })
+                        }
+
+    
+    </script>
+    
+    
+    <!--IOS VIDEO COMPATABILITY-->
+    <script>
+        AFRAME.registerComponent('play-on-click', {
+          init: function () {
+            this.onClick = this.onClick.bind(this);
+          },
+          play: function () {
+            window.addEventListener('click', this.onClick);
+          },
+          pause: function () {
+            window.removeEventListener('click', this.onClick);
+          },
+          onClick: function (evt) {
+            var videoEl = this.el.getAttribute('material').src;
+            if (!videoEl) { return; }
+            this.el.object3D.visible = true;
+            videoEl.play();
+          }
+        });
+    </script> 
+    
+    
+    <!--- GOTO SCRIPT --->
+    <script>
+      AFRAME.registerSystem("goto", {
+        init: function() {
+          // global - shared between all goto components
+          this.isMoving = false;
+        }
+      });
+
+      AFRAME.registerComponent("goto", {
+        init: function() {
+          let rig = document.querySelector('#pov')
+          rig.addEventListener('animationcomplete', e=> {
+            this.system.isMoving = false
+          })
+          this.el.addEventListener("click", e => {
+            if (this.system.isMoving) return;
+            let targetPos = this.el.getAttribute("position")
+            let rigPos = rig.getAttribute("position")
+            this.system.isMoving = true
+            
+            
+            rig.setAttribute("animation", {
+              "from": rigPos,
+              "to": AFRAME.utils.coordinates.stringify({x: targetPos.x, y: rigPos.y, z: targetPos.z}),
+              "dur": targetPos.distanceTo(rigPos) * 200
+            })
+            rig.emit('go')
+          });
+        }
+      });
+    </script>
+    
+    
+    
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    
+    <!---LINK TRAVERSAL-->
+    <script>
+    AFRAME.registerComponent('link-url', {
+          schema: {url: {default: ''},},
+
+          init: function () {
+            var url = this.data.url;
+            this.el.addEventListener('click', function () {
+              window.location.href = url;
+            });
+          }
+        });
+    </script>
+
+  </head>
+ 
+  
+  
+    <body>
+    <a-scene
+             fog="type: linear; color: #000000; far: 30; near: 0; density: 0.005">
+      <!-- Asset Management System-->
+
+      <a-assets>
+        <a-asset-item
+          id="gallery"
+          src="businside.gltf"
+          
+        ></a-asset-item> 
+      </a-assets>
+    
+    
+      <!--CAMERA-->
+
+      <a-entity
+        position="0 0 2"
+        rotation="0 0 0"
+        id="pov"
+        animation="property: position; startEvents: go"
+      >
+        <a-camera look-controls wasd-controls-enabled="false">
+          <a-entity
+            cursor="rayOrigin: mouse"
+            position="0 0 -1"        
+          >
+          </a-entity>
+        </a-camera>
+      </a-entity>
+
+      <!-- Scene -->
+      <a-entity>
+            <a-entity animation="property: rotation; 
+                           dir: alternate;
+                            from: 0 0 0;
+                            to: 0 1.4 1.4; 
+                           loop: true; 
+                           dur: 2000;
+                            easing: easeInOutCubic;
+                           autoplay: true">
+            <a-entity gltf-model="#gallery"
+                shadow="cast: true; receive: true"
+                
+                > 
+          </a-entity>
+        </a-entity>
+        </a-entity>
+        
+        <a-text 
+        href="hallway.html" 
+        position= "0.7 1.4 1.4"  
+        rotation="0 -60 0"  
+        color="blue"  
+        scale=".3 .3 .3" 
+        value="Click to Exit Room 464"
+        geometry="primitive: plane; width: 2.3; height: 0.5;"
+        material="color: #b7beff;"
+        align=  "center"
+        event-set__down="_event: mousedown; color: #ADD8E6"
+            ></a-text>
+        
+        
+        
+        
+        <a-text 
+            position= "-.7 1.4 1.2" 
+            color="white" 
+            rotation="0 60 0" 
+            scale=".2 .2 .2" 
+            value="Click the circles on the ground
+                   to navigate around the bus"
+            geometry="primitive: plane; width: 4.3; height: 1;"
+            material="color: #black;
+                      opacity: 0.8;"
+            align="center"
+                width="6"
+            ></a-text>  
+        
+        
+        <a-entity>
+          <a-entity>
+              <a-entity position="0 -45 0"
+                        animation="property: rotation; 
+                           dir: ;
+                            from: 0 90 0;
+                            to: 360 90 0; 
+                           loop: true; 
+                           dur: 2000;
+                          easing: linear;
+                          
+                           autoplay: true"
+                        >
+                <a-torus
+                        material="side: double;
+                                  src: room470/stars.jpg;
+                                  openEnded: true;"
+                        scale= "50 50 50"
+                        rotation= "0 0 0"
+                        shader="ios10hls"
+                        >
+
+                </a-torus>
+                </a-entity>
+            </a-entity>
+        </a-entity>
+          
+
+      
+      <!--1 Waypoint-->
+         <a-cylinder
+                  goto
+                  scale= ".2 .03 .2"
+                  position= "0 .04 0";
+                  event-set__down="_event: mousedown; scale: .1 .03 .1";
+                  event-set__up="_event: mouseup; scale: .2 .03 .2";
+                  event-set__leave="_event: mouseleave; scale: .2 .03 .2;"
+                  color="white"
+                  opacity="0.3"
+        ></a-cylinder>
+        
+      <!--2 Waypoint-->
+         <a-cylinder
+                  goto
+                  scale= ".2 .03 .2"
+                  position= "0 0.4 2";
+                  event-set__down="_event: mousedown; scale: .1 .03 .1";
+                  event-set__up="_event: mouseup; scale: .2 .03 .2";
+                  event-set__leave="_event: mouseleave; scale: .2 .03 .2;"
+                  color="white"
+                  opacity="0.3"
+        ></a-cylinder>
+        
+        <!--3 Waypoint-->
+         <a-cylinder
+                  goto
+                  scale= ".2 .03 .2"
+                  position= "0 .04 -3";
+                  event-set__down="_event: mousedown; scale: .1 .03 .1";
+                  event-set__up="_event: mouseup; scale: .2 .03 .2";
+                  event-set__leave="_event: mouseleave; scale: .2 .03 .2;"
+                  color="white"
+                  opacity="0.3"
+        ></a-cylinder>
+
+        <!-- Ambient Light -->
+
+      <a-light type="ambient" color="#222"></a-light>
+      <a-sky color="black"></a-sky>
+        
+
+      
+        <a-light color="blue" 
+                 position="-2 1.5 0" 
+                 type="point"
+                 intensity="8"
+                 penumbra="0.3"
+                 distance="3"
+               ></a-light>
+        <a-light color="blue" 
+                 position="2 1.5 0" 
+                 type="point"
+                 intensity="8"
+                 penumbra="0.3"
+                 distance="3"
+               ></a-light>
+
+      
+        <a-light color="#fff4e9" 
+                 position="0 1.5 -5" 
+                 type="point"
+                 intensity="1.5"
+                 penumbra="0.3"
+                 distance="5"
+               ></a-light> 
+      
+        <a-light color="#fff4e9" 
+                 position="0 1.5 5" 
+                 type="point"
+                 intensity="1.5"
+                 penumbra="0.3"
+                 distance="5"
+               ></a-light> 
+      
+        <a-light color="#fff4e9" 
+                 position="0 1.5 0" 
+                 type="point"
+                 intensity="1.5"
+                 penumbra="0.3"
+                 distance="5"
+               ></a-light>     
+      
+      
+      
+      
+       <a-light color="#face41" 
+                position="-0 1 -10.5" 
+                type="spot"
+                rotation="0 180 -0"
+                intensity="2"
+                penumbra=".1"
+                angle="15"
+                distance="10"></a-light>
+        
+        
+        <script>
+  var canClick = true; // Set initial click state to true
+  var cooldownTime = 300; // Set cooldown time in milliseconds
+  var isMouseDown = false; // Set initial mouse state to false
+  var mouseUpEvent = new Event('mouseup'); // Create mouseup event
+            
+    
+    document.querySelector('a-text').addEventListener('click', function () {
+  if (canClick) {
+    window.location.href = this.getAttribute('href');
+    canClick = false; // Set click state to false
+    setTimeout(function () {
+      canClick = true; // Reset click state to true after cooldown
+    }, cooldownTime);
+  }
+});
+
+  document.querySelectorAll('.clickable').forEach(function(el) {
+    el.addEventListener('mousedown', function () {
+      isMouseDown = true; // Set mouse state to true when clicked down
+    });
+
+    el.addEventListener('mouseup', function (event) {
+      if (isMouseDown && canClick) {
+        var intersection = event.detail.intersection;
+        var distance = intersection.distance;
+        // Minimize accidental clicks by checking if the click was within a reasonable distance from the camera
+        if (distance < 10) {
+          var newPosition = intersection.point;
+          newPosition.y = 1.6; // Adjust the camera height to your liking
+          document.querySelector('a-camera').setAttribute('animation', 'property: position; to: ' + newPosition.x + ' ' + newPosition.y + ' ' + newPosition.z + '; dur: 500');
+
+          canClick = false; // Set click state to false
+          setTimeout(function () {
+            canClick = true; // Reset click state to true after cooldown
+          }, cooldownTime);
+        }
+      }
+      isMouseDown = false; // Reset mouse state to false on click up
+    });
+
+    el.addEventListener('mouseleave', function () {
+      if (isMouseDown) {
+        el.dispatchEvent(mouseUpEvent); // Trigger mouseup event if mouse leaves clickable area while still clicked down
+      }
+      isMouseDown = false; // Reset mouse state to false on mouse leave
+    });
+  });
+</script>
+        
+        
+
+    </a-scene>          
+  </body>
+</html>

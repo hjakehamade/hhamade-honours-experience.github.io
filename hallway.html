@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <!--    Place the script for aframe here     -->
+    <script src="aframe.min.js"></script>
+    <!-- Link Clicking -->
+    <script src="aframe-href-component.min.js"></script>
+    <!--     Place the script for aframe extras here -->
+    <script src="aframe-extras.js"></script>
+    <!--     Place the script for the environment component here -->
+    <script src="aframe-environment-component.min.js"></script>
+    <!--    Event Waypoint Script -->
+    <script src="aframe-particle-system-component.min.js"></script>  
+    <script src="aframe-event-set-component.min.js"></script>
+      
+  <!--Text Service Worker-->
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/service-worker.js')
+      .then(registration => {
+        console.log('Service worker registered:', registration);
+      })
+      .catch(error => {
+        console.error('Service worker registration failed:', error);
+      });
+  }
+</script>
+            
+    
+    <!-- ANIMATE PNG-->
+    <script src="animatepng.js"></script>
+      <script src="animatepng2.js"></script>
+      <script src="animatepng3.js"></script>
+    
+    <!---VERTICAL PITCH touch controls--->
+    <script>
+    
+    AFRAME.components["look-controls"].Component.prototype.onTouchMove = function (t) {
+                        var PI_2 = Math.PI/2,
+                        e,
+                        o = this.el.sceneEl.canvas,
+                        i = this.yawObject,
+                        j = this.pitchObject;
+                        this.touchStarted && this.data.touchEnabled && (e = 2 * Math.PI * (t.touches[0].pageX - this.touchStart.x) / o.clientWidth, f = 2 * Math.PI * (t.touches[0].pageY - this.touchStart.y) / o.clientHeight, j.rotation.x += .3 * f, i.rotation.y += .5 * e, j.rotation.x = Math.max(-PI_2, Math.min(PI_2, j.rotation.x)), this.touchStart = {
+                                x: t.touches[0].pageX,
+                                y: t.touches[0].pageY
+                            })
+                        }
+
+    
+    </script>
+    
+    
+    <!--IOS VIDEO COMPATABILITY-->
+    <script>
+        AFRAME.registerComponent('play-on-click', {
+          init: function () {
+            this.onClick = this.onClick.bind(this);
+          },
+          play: function () {
+            window.addEventListener('click', this.onClick);
+          },
+          pause: function () {
+            window.removeEventListener('click', this.onClick);
+          },
+          onClick: function (evt) {
+            var videoEl = this.el.getAttribute('material').src;
+            if (!videoEl) { return; }
+            this.el.object3D.visible = true;
+            videoEl.play();
+          }
+        });
+    </script> 
+    
+    
+    <!--- GOTO SCRIPT --->
+    <script>
+      AFRAME.registerSystem("goto", {
+        init: function() {
+          // global - shared between all goto components
+          this.isMoving = false;
+        }
+      });
+
+      AFRAME.registerComponent("goto", {
+        init: function() {
+          let rig = document.querySelector('#pov')
+          rig.addEventListener('animationcomplete', e=> {
+            this.system.isMoving = false
+          })
+          this.el.addEventListener("click", e => {
+            if (this.system.isMoving) return;
+            let targetPos = this.el.getAttribute("position")
+            let rigPos = rig.getAttribute("position")
+            this.system.isMoving = true
+            
+            
+            rig.setAttribute("animation", {
+              "from": rigPos,
+              "to": AFRAME.utils.coordinates.stringify({x: targetPos.x, y: rigPos.y, z: targetPos.z}),
+              "dur": targetPos.distanceTo(rigPos) * 200
+            })
+            rig.emit('go')
+          });
+        }
+      });
+    </script>
+    
+    
+    
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    
+    <!---LINK TRAVERSAL-->
+    <script>
+    AFRAME.registerComponent('link-url', {
+          schema: {url: {default: ''},},
+
+          init: function () {
+            var url = this.data.url;
+            this.el.addEventListener('click', function () {
+              window.location.href = url;
+            });
+          }
+        });
+    </script>
+
+  </head>
+ 
+  
+  
+   <body>
+       
+       <script>
+// create the splash screen element
+const splashScreen = document.createElement('div');
+splashScreen.style.position = 'fixed';
+splashScreen.style.top = '0';
+splashScreen.style.left = '0';
+splashScreen.style.width = '100%';
+splashScreen.style.height = '100%';
+splashScreen.style.backgroundColor = 'rgba(0,0,0,0.7)';
+splashScreen.style.zIndex = '9999';
+
+// add the instructions to the splash screen
+const instructions = document.createElement('div');
+instructions.style.color = '#fff';
+instructions.style.textAlign = 'center';
+instructions.style.marginTop = '50vh';
+instructions.style.transform = 'translateY(-50%)';
+instructions.style.fontSize = '24px';
+instructions.style.fontWeight = 'bold';
+
+const line1 = document.createElement('p');
+line1.innerText = 'This is an interactive gallery application';
+instructions.appendChild(line1);
+
+const line2 = document.createElement('p');
+line2.innerText = '...';
+instructions.appendChild(line2);
+
+const line3 = document.createElement('p');
+line3.innerText = 'click anywhere to begin';
+instructions.appendChild(line3);
+
+splashScreen.appendChild(instructions);
+
+// add the splash screen to the body
+document.body.appendChild(splashScreen);
+
+// create the audio element
+const audioElement = new Audio('gallerysound.mp3');
+audioElement.loop = true;
+
+// add an event listener to the splash screen to start the audio and remove the splash screen on click
+splashScreen.addEventListener('click', () => {
+  audioElement.play();
+  splashScreen.remove();
+});
+</script>
+       
+       
+       
+       
+       
+    <a-scene
+             >
+      <!-- Asset Management System-->
+
+      <a-assets>
+        <a-asset-item
+          id="gallery"
+          src="Hallway.gltf"
+        ></a-asset-item> 
+        <a-asset-item
+          id="gallerygeometry"
+          src="Hallway/hallwayGeometry.gltf"
+        ></a-asset-item>
+        <a-asset-item
+          id="heart"
+          src="heart.gltf"
+        ></a-asset-item>
+        <a-asset-item
+          id="computer"
+          src="computer.gltf"
+        ></a-asset-item> 
+          
+          
+          <a-asset-item
+          id="environment1"
+          src="environment1.gltf"
+        ></a-asset-item>
+          <a-asset-item
+          id="environment2"
+          src="environment2.gltf"
+        ></a-asset-item>
+          <a-asset-item
+          id="environment3"
+          src="environment3.gltf"
+        ></a-asset-item>
+          <a-asset-item
+          id="environment4"
+          src="environment4.gltf"
+        ></a-asset-item>
+          <a-asset-item
+          id="environment5"
+          src="environment5.gltf"
+        ></a-asset-item>
+        
+        <video muted id="gamer" 
+               src="gamer.mp4" 
+               webkit-playsinline autoplay loop="true">
+        </video>
+        <video muted id="paul" 
+               src="paul.mp4" 
+               webkit-playsinline autoplay loop="true">
+        </video>
+        
+        <a-audio id="ambient" src="gallerysound.wav" preload="auto">
+        </a-audio>
+
+      </a-assets>
+    
+      <!--CAMERA-->
+
+<a-entity 
+          rotation="0 0 0">
+     <a-entity position="0 0 0" 
+               rotation="0 0 0" 
+               id="pov" 
+               animation="property: 
+                          position; 
+                          startEvents: go">
+  <a-camera look-controls wasd-controls-enabled="true">
+    <a-entity cursor="rayOrigin: mouse" 
+              ></a-entity>
+  </a-camera>
+</a-entity>
+</a-entity>
+    
+
+        
+
+      <!-- Scene -->
+
+     <a-entity sound="#ambient; 
+                      autoplay: true;
+                      loop: true;"
+               position="0 0 0">
+        </a-entity> 
+        
+        
+        
+    <a-entity gltf-model="#gallery"  
+              shadow="cast: false; receive: false" 
+              position="-6.62366 0 0.09466" 
+              rotation="0 180 0"
+              >
+        </a-entity>
+    
+    
+        
+    <a-entity class="clickable"
+          gltf-model="#gallerygeometry"
+          id="Geometry"
+          shadow="cast: false; receive: false" 
+          position="-6.62366 0.05 0.09466" 
+          rotation="0 180 0"
+          material="opacity: 0;"
+          >
+        </a-entity>
+        
+        
+        <!-----------Grandma--->
+        
+     <a-entity gltf-model="#environment4"  
+              shadow="cast: false; receive: false" 
+              position="-4 1.3 1" 
+              rotation="0 140 0"
+              scale=".1 .1 .1"
+              >
+        </a-entity>
+        <a-box
+               position="-4 0.5 1"
+               scale="0.8 1 0.8"
+               color="white">
+        </a-box>   
+        <a-image src="Grandma4.png"
+                 scale="0.4 0.4 0"
+                 position="-3.4 2 0.8"
+                 rotation="10 120 40">
+        
+        </a-image>
+        
+        
+        
+        
+         <a-entity gltf-model="#environment2"  
+              shadow="cast: false; receive: false" 
+              position="-5.5 1.5 1" 
+              rotation="0 150 0"
+              scale=".1 .1 .1"
+              >
+             
+        </a-entity>
+        <a-box
+               position="-5.5 0.5 1"
+               scale="0.8 1.35 0.8"
+               color="white">
+        </a-box>
+        <a-image src="Grandma2.png"
+                 scale="0.5 0.5 0"
+                 position="-5 1.8 0.3"
+                 rotation="20 -160 20">
+        
+        </a-image>
+        
+        
+        
+        
+        
+        <a-entity gltf-model="#environment1"  
+              shadow="cast: false; receive: false" 
+              position="-7 1.75 1" 
+              rotation="0 180 0"
+              scale=".15 .15 .15"
+              >
+        </a-entity>
+        <a-box
+               position="-7 0.5 1"
+               scale="1 1.6 1"
+               color="white">
+        </a-box>
+        <a-image src="Grandma1.png"
+                 scale="0.5 0.5 0"
+                 position="-7.4 2.5 -0.1"
+                 rotation="20 120 20">
+        
+        </a-image>
+        
+        
+
+        
+        
+        <a-entity gltf-model="#environment5"  
+              shadow="cast: false; receive: false" 
+              position="-8.5 1.6 1" 
+              rotation="0 -180 0"
+              scale=".1 .1 .1"
+              >
+        </a-entity>
+        <a-box
+               position="-8.5 0.5 1"
+               scale="0.8 1.6 0.8"
+               color="white">
+        </a-box>
+        <a-image src="Grandma5.png"
+                 scale="0.4 0.4 0"
+                 position="-7.9 1.5 0"
+                 rotation="10 -120 30">
+        
+        </a-image>
+        
+        
+        
+        
+        
+        <a-entity gltf-model="#environment3"  
+              shadow="cast: false; receive: false" 
+              position="-10 1.3 1" 
+              rotation="0 180 0"
+              scale=".1 .1 .1"
+              >
+        </a-entity>
+        <a-box
+               position="-10 0.5 1"
+               scale="0.8 1 0.8"
+               color="white">
+        </a-box>
+        <a-image src="Grandma3.png"
+                 scale="0.4 0.4 0"
+                 position="-10 2 0.8"
+                 rotation="-10 -190 -30">
+        
+        </a-image>
+        
+        <a-plane
+                position="-11.5 1 1.62"
+                rotation="0 180 0"
+                color="white"
+                scale="0.5 0.5"
+                geometry="primitive: plane; width: 2.6; height: 0.6;"
+                align="left"
+                anchor="center"
+                text="value: untitled - post mortem digital archive
+                      
+                       augmented reality soft sculpture
+                       december 2 2022;
+                      color: black;">
+        
+        </a-plane>
+        
+        <!------Grandma end-->
+        
+        
+        
+      <a-entity >
+            <a-entity>
+                <a-video playsinline 
+                         webkitplaysinline
+                         src="#gamer" 
+                         width="3.9" 
+                         height="2.87"
+                         rotation="0 180 0" 
+                         position="6 2 1.62"
+                         play-on-click="true"
+                         ></a-video>
+
+            </a-entity>
+        </a-entity>
+        <a-plane
+                position="3.3 1 1.62"
+                rotation="0 180 0"
+                color="white"
+                scale="0.5 0.5"
+                geometry="primitive: plane; width: 2.6; height: 0.6;"
+                align="left"
+                anchor="center"
+                text="value: r/malelivingspaces
+                      
+                       video mp4
+                       december 5 2022;
+                      color: black;">
+        
+        </a-plane>
+        
+        
+      <a-entity position ="-12.8 1 -13"
+                rotation="0 180 0">
+          <a-entity animation="property: scale; 
+                           dir: alternate;
+                            from: 2 2 2;
+                            to: 2.1 2.3 2.1; 
+                           loop: true; 
+                           dur: 500;
+                            easing: easeInOutCubic;
+                           autoplay: true">
+              <a-entity gltf-model="#heart"
+                shadow="cast: true; receive: true"
+
+
+                rotation="90 0 180"
+                > </a-entity>
+          </a-entity>
+        </a-entity>
+        
+    
+    <!--PAUL-->
+      <a-entity >
+            <a-entity>
+                <a-video playsinline 
+                         webkitplaysinline
+                         src="#paul" 
+                         width="2.87" 
+                         height="2.87"
+                         rotation="0 180 0" 
+                         position="-15 2 1.62"
+                         play-on-click="true"
+                         ></a-video>
+
+            </a-entity>
+        </a-entity>   
+        <a-plane
+                position="-17.4 1 1.62"
+                rotation="0 180 0"
+                color="white"
+                scale="0.5 0.5"
+                geometry="primitive: plane; width: 2.6; height: 0.6;"
+                align="left"
+                anchor="center"
+                text="value: paul.mp4
+                      
+                       video mp4
+                       december 10 2020;
+                      color: black;">
+        
+        </a-plane>
+        
+    
+        <!--Fuentes hears the whistle-->
+        <a-image src="fuentes.png"
+                 scale="2 2 2"
+                 position="-19 1.7 -1.6"
+                 rotation="0 6 0">
+        
+        </a-image>
+        <a-plane
+                position="-17.2 1 -1.8"
+                rotation="0 6 0"
+                color="white"
+                scale="0.5 0.5"
+                geometry="primitive: plane; width: 2.6; height: 0.6;"
+                align="left"
+                anchor="center"
+                text="value: fuentes hears the whistle, can you?
+                      
+                       quilt
+                       december 2 2019;
+                      color: black;">
+        
+        </a-plane>
+        
+        <!---Text typing-->
+        
+<a-entity>
+  <script id="text-typing2" type="text/javascript">
+    AFRAME.registerComponent("text-typing", {
+      init: function () {
+        var textEl = this.el;
+        var text = textEl.getAttribute("value");
+        textEl.setAttribute("value", "");
+        var index = 0;
+        var interval;
+        var restartDelay = textEl.getAttribute("restart-delay") || 0;
+
+        function typeText() {
+          interval = setInterval(function () {
+            if (index < text.length) {
+              textEl.setAttribute(
+                "value",
+                textEl.getAttribute("value") + text.charAt(index)
+              );
+              index++;
+            } else {
+              clearInterval(interval);
+              setTimeout(function () {
+                index = 0;
+                textEl.setAttribute("value", "");
+                typeText();
+              }, restartDelay);
+            }
+          }, 100);
+        }
+
+        typeText();
+      },
+    });
+  </script>
+  <a-text
+    id="your-text-id2"
+    scale="1 1 1"
+    position="-2 1.5 -2.3"
+    rotation="0 -9 0"
+    anchor="center"
+    align="center"
+    value="bygones are bygones . . .
+           what i thought was a totem
+           turns out to be a hellfire . . ."
+    text-typing="restart-delay: 5000"
+    font="mozillavr"
+    color="#474747"
+    width="4"
+    visible="true"
+  ></a-text>
+</a-entity>
+
+
+
+       
+        <a-entity>
+        <script id="text-typing" type="text/javascript">
+          AFRAME.registerComponent("text-typing", {
+            init: function () {
+              var textEl = this.el;
+              var text = textEl.getAttribute("value");
+              textEl.setAttribute("value", "");
+              var index = 0;
+              var interval;
+              var restartDelay = textEl.getAttribute("restart-delay") || 0;
+
+              function typeText() {
+                interval = setInterval(function () {
+                  if (index < text.length) {
+                    textEl.setAttribute(
+                      "value",
+                      textEl.getAttribute("value") + text.charAt(index)
+                    );
+                    index++;
+                  } else {
+                    clearInterval(interval);
+                    setTimeout(function () {
+                      index = 0;
+                      textEl.setAttribute("value", "");
+                      typeText();
+                    }, restartDelay);
+                  }
+                }, 100);
+              }
+
+              typeText();
+            },
+          });
+        </script>
+        <a-text
+          id="your-text-id"
+          scale="1.5 1.5 1.5"
+          position="-10.5 1.5 -6.5"
+          rotation="0 -100 20"
+          anchor="center"
+          value="my aching heart beats for times past
+                 as if i were there
+                 and maybe one day
+                 my rose tinted glasses will shatter . . ."
+          text-typing="restart-delay: 5000"
+          font="mozillavr"
+        material="side: double;"
+        ></a-text>
+        </a-entity>
+        
+  
+       <a-sky
+               src="bsod.png"
+               animate-png2></a-sky>
+    <a-plane 
+               position="3.4 1.35 -2.8"
+               scale="2.4 2.5 3"
+               rotation="0 40 0"
+               material="repeat: 7 7;
+                         side: double;"
+                animate-png
+               >
+      </a-plane>
+      
+      
+      
+    <!--LINKS-->
+ 	<a-text href="Room470.html" 
+        position="10.8 0.81 0.5" 
+        rotation="0 -90 0" 
+        color="blue"  
+        scale=".5 .5 .5" 
+        value="Click to Enter Room 470"
+        geometry="primitive: plane; width: 2.5; height: 0.5;"
+        material="color: #b7beff;"
+        align=  "center"
+        event-set__down="_event: mousedown; color: #ADD8E6"
+            ></a-text>   
+        <a-text href="index.html" 
+        position="1.68 0.81 1.6" 
+        rotation="0 180 0" 
+        color="blue"  
+        scale=".5 .5 .5" 
+        value="Click to Enter Room 468"
+        geometry="primitive: plane; width: 2.5; height: 0.5;"
+        material="color: #b7beff;"
+        align=  "center"
+        event-set__down="_event: mousedown; color: #ADD8E6"
+            ></a-text>
+	<a-text href="room466.html" 
+        position="-1.3 0.81 1.6" 
+        rotation="0 180 0" 
+        color="blue"  
+        scale=".5 .5 .5" 
+        value="Click to Enter Room 466"
+        geometry="primitive: plane; width: 2.5; height: 0.5;"
+        material="color: #b7beff;"
+        align=  "center"
+        event-set__down="_event: mousedown; color: #ADD8E6"
+            ></a-text>
+	<a-text href="room464.html" 
+        position="-21.8 0.81 1.6" 
+        rotation="0 180 0" 
+        color="blue"  
+        scale=".5 .5 .5" 
+        value="Click to Enter Room 464"
+        geometry="primitive: plane; width: 2.5; height: 0.5;"
+        material="color: #b7beff;"
+        align=  "center"
+        event-set__down="_event: mousedown; color: #ADD8E6"
+            ></a-text>
+    <a-text href="room462.html" 
+        position="-24.7 0.81 1.6" 
+        rotation="0 180 0" 
+        color="blue"  
+        scale=".5 .5 .5" 
+        value="Click to Enter Room 462"
+        geometry="primitive: plane; width: 2.5; height: 0.5;"
+        material="color: #b7beff;"
+        align=  "center"
+        event-set__down="_event: mousedown; color: #ADD8E6"
+            ></a-text>
+     <a-text href="room460.html" 
+        position="-30.2 0.81 0.7" 
+        rotation="0 90 0" 
+        color="blue"  
+        scale=".5 .5 .5" 
+        value="Click to Enter Room 460"
+        geometry="primitive: plane; width: 2.5; height: 0.5;"
+        material="color: #b7beff;"
+        align=  "center"
+        event-set__down="_event: mousedown; color: #ADD8E6"
+            ></a-text>
+
+        
+        
+        <script>
+  var canClick = true; // Set initial click state to true
+  var cooldownTime = 300; // Set cooldown time in milliseconds
+  var isMouseDown = false; // Set initial mouse state to false
+  var mouseUpEvent = new Event('mouseup'); // Create mouseup event
+
+  document.querySelectorAll('.clickable').forEach(function(el) {
+    el.addEventListener('mousedown', function () {
+      isMouseDown = true; // Set mouse state to true when clicked down
+    });
+
+    el.addEventListener('mouseup', function (event) {
+      if (isMouseDown && canClick) {
+        var intersection = event.detail.intersection;
+        var distance = intersection.distance;
+        // Minimize accidental clicks by checking if the click was within a reasonable distance from the camera
+        if (distance < 10) {
+          var newPosition = intersection.point;
+          newPosition.y = 1.6; // Adjust the camera height to your liking
+          document.querySelector('a-camera').setAttribute('animation', 'property: position; to: ' + newPosition.x + ' ' + newPosition.y + ' ' + newPosition.z + '; dur: 500');
+
+          canClick = false; // Set click state to false
+          setTimeout(function () {
+            canClick = true; // Reset click state to true after cooldown
+          }, cooldownTime);
+        }
+      }
+      isMouseDown = false; // Reset mouse state to false on click up
+    });
+
+    el.addEventListener('mouseleave', function () {
+      if (isMouseDown) {
+        el.dispatchEvent(mouseUpEvent); // Trigger mouseup event if mouse leaves clickable area while still clicked down
+      }
+      isMouseDown = false; // Reset mouse state to false on mouse leave
+    });
+  });
+  
+  document.querySelectorAll('a-text').forEach(function(el) {
+    el.addEventListener('click', function () {
+      var href = this.getAttribute('href');
+      if (href && href !== 'null') {
+        window.location.href = href;
+        canClick = false; // Set click state to false
+        setTimeout(function () {
+          canClick = true; // Reset click state to true after cooldown
+        }, cooldownTime);
+      }
+    });
+  });
+</script>
+
+         
+        
+        <!-- Ambient Light -->
+        <a-entity light="type: ambient;
+                         color: #BBB
+                         intensity: 0.1">
+        </a-entity>
+        
+         <a-entity light="type: point;
+                         color: #BBB;
+                         intensity: 0.15;"
+                  position="0 3 0"
+                  rotation="0 90 0">
+        </a-entity>
+
+    </a-scene>          
+  </body>
+</html>
