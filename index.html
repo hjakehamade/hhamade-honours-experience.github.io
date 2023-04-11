@@ -18,6 +18,29 @@
     <script src="animatepng.js"></script>
       <script src="animatepng2.js"></script>
       <script src="animatepng3.js"></script>
+
+<!-- SPEECH SYNTHESIS -->
+     <script>
+function speak(text) {
+  var synth = window.speechSynthesis;
+  var chunks = text.match(/[^\.!\?]+[\.!\?]+/g); // split the text into full sentences
+  var currentChunk = 0;
+  
+  if (!synth.speaking) { // check if the speech has ended before starting a new one
+    var utterance = new SpeechSynthesisUtterance(chunks[currentChunk]);
+
+    utterance.onend = function() {
+      currentChunk++;
+      if (currentChunk < chunks.length) {
+        utterance.text = chunks[currentChunk];
+        synth.speak(utterance);
+      }
+    };
+
+    synth.speak(utterance);
+  }
+}
+</script>	  
     
     <!---VERTICAL PITCH touch controls--->
     <script>
@@ -255,7 +278,7 @@ splashScreen.addEventListener('click', () => {
 
         
         
-        <a-image src="instructions1.png"
+                <a-image src="instructions1.png"
                  material="side: single"
                  position="0 1.40 -1.5"
                  scale="0.5 0.5 0.5" 
@@ -266,10 +289,12 @@ splashScreen.addEventListener('click', () => {
                             dur: 1000;
                             loop: true;
                             dir: alternate"
+                 
+                 onclick="speak('click the ground to move the camera. Have fun!')"
                  ></a-image>
         
         <a-text
-                value="bygones, byonges is an exhibition set in a virtual plane mirroring the physicality of the space it is designed for. By virtue of its medium, this exhibition aims to interrogate the nature of the digital archive as an assumed permanent vault that is immune to decay."
+                value="bygones, bygones is an exhibition set in a virtual plane mirroring the physicality of the space it is designed for. By virtue of its medium, this exhibition aims to interrogate the nature of the digital archive as an assumed permanent vault that is immune to decay."
                 color="black"
                 position="2.5 2.8 -3.45706"
                 anchor="center"
@@ -280,6 +305,7 @@ splashScreen.addEventListener('click', () => {
                           width: 5.2; 
                           height: 1.8;"
                 material="color: white"
+                onclick="speak('bygones, bygones is an exhibition set in a virtual plane mirroring the physicality of the space it is designed for. By virtue of its medium, this exhibition aims to interrogate the nature of the digital archive as an assumed permanent vault that is immune to decay.')"
                 >
         </a-text>
         <a-text
@@ -293,7 +319,9 @@ splashScreen.addEventListener('click', () => {
                 geometry="primitive: plane; 
                           width: 5.2; 
                           height: 1.8;"
-                material="color: white">
+                material="color: white"
+                onclick="speak('The unfortunate reality of back up drives, flash storage, and web based mediums is that they are too in constant flux with the environment around them. While canvas and paper falls ill to decay of organic nature, the digital archive lays vulnerable to bit rot, link death, memory errors, and data leakage.')"
+                >
         </a-text>
         <a-text
                 value="The cultural attitudes of virtual storage exists without this acceptance of decay - rather, the digital archive is heightened to a status of immortality, allowing for peace of mind for archiving memories and experiences in the file cabinet of cloud storage. Bygones, bygones, questions this digital impermanence in the era of lax attitudes to the personal archival processes in retrospect to nostalgia."
@@ -306,7 +334,8 @@ splashScreen.addEventListener('click', () => {
                 geometry="primitive: plane; 
                           width: 5.2; 
                           height: 2.8;"
-                material="color: white">
+                material="color: white"
+                onclick="speak('The cultural attitudes of virtual storage exists without this acceptance of decay - rather, the digital archive is heightened to a status of immortality, allowing for peace of mind for archiving memories and experiences in the file cabinet of cloud storage. Bygones, bygones, questions this digital impermanence in the era of lax attitudes to the personal archival processes in retrospect to nostalgia.')">
         </a-text>
         
         
