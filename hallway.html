@@ -13,6 +13,29 @@
     <!--    Event Waypoint Script -->
     <script src="aframe-particle-system-component.min.js"></script>  
     <script src="aframe-event-set-component.min.js"></script>
+	  
+<!-- SPEECH SYNTHESIS -->
+     <script>
+function speak(text) {
+  var synth = window.speechSynthesis;
+  var chunks = text.match(/[^\.!\?]+[\.!\?]+/g); // split the text into full sentences
+  var currentChunk = 0;
+  
+  if (!synth.speaking) { // check if the speech has ended before starting a new one
+    var utterance = new SpeechSynthesisUtterance(chunks[currentChunk]);
+
+    utterance.onend = function() {
+      currentChunk++;
+      if (currentChunk < chunks.length) {
+        utterance.text = chunks[currentChunk];
+        synth.speak(utterance);
+      }
+    };
+
+    synth.speak(utterance);
+  }
+}
+</script>	
          
     
     <!-- ANIMATE PNG-->
@@ -404,7 +427,9 @@ splashScreen.addEventListener('click', () => {
                       
                        augmented reality soft sculpture
                        december 2 2022;
-                      color: black;">
+                      color: black;"
+		 onclick="speak('Untitled post mortem digital archive, augmented reality soft sculpture, december second 2022')"
+		 >
         
         </a-plane>
         
@@ -414,20 +439,22 @@ splashScreen.addEventListener('click', () => {
         
       <a-entity >
             <a-entity>
-                <a-video playsinline 
+               <a-video playsinline 
                          webkitplaysinline
                          src="#gamer" 
                          width="3.9" 
                          height="2.87"
+                         scale="0.5 0.5 0.5"
                          rotation="0 180 0" 
-                         position="6 2 1.62"
+                         position="6 1.6 1.62"
                          play-on-click="true"
                          ></a-video>
+
 
             </a-entity>
         </a-entity>
         <a-plane
-                position="3.3 1 1.62"
+                position="4.2 1.05 1.62"
                 rotation="0 180 0"
                 color="white"
                 scale="0.5 0.5"
@@ -438,7 +465,8 @@ splashScreen.addEventListener('click', () => {
                       
                        video mp4
                        december 5 2022;
-                      color: black;">
+                      color: black;"
+		 onclick="speak('R slash male living spaces, Video MP4, december fifth 2022')">
         
         </a-plane>
         
@@ -468,18 +496,19 @@ splashScreen.addEventListener('click', () => {
             <a-entity>
                 <a-video playsinline 
                          webkitplaysinline
+                         scale="0.5 0.5 0.5"
                          src="#paul" 
                          width="2.87" 
                          height="2.87"
                          rotation="0 180 0" 
-                         position="-15 2 1.62"
+                         position="-15 1.6 1.62"
                          play-on-click="true"
                          ></a-video>
 
             </a-entity>
         </a-entity>   
         <a-plane
-                position="-17.4 1 1.62"
+                position="-16.5 1.05 1.62"
                 rotation="0 180 0"
                 color="white"
                 scale="0.5 0.5"
@@ -490,7 +519,8 @@ splashScreen.addEventListener('click', () => {
                       
                        video mp4
                        december 10 2020;
-                      color: black;">
+                      color: black;"
+		 onclick="speak('paul dot MP4, video MP4, december tenth 2020')">
         
         </a-plane>
         
@@ -514,7 +544,8 @@ splashScreen.addEventListener('click', () => {
                       
                        quilt
                        december 2 2019;
-                      color: black;">
+                      color: black;"
+		 onclick="speak('fuentes hears the whistle can you, quilt, december second 2019')">
         
         </a-plane>
         
@@ -569,6 +600,7 @@ splashScreen.addEventListener('click', () => {
     color="#474747"
     width="4"
     visible="true"
+	onclick="speak('bygones are bygones. What I thought was a totem, turns out to be a hellfire.')"
   ></a-text>
 </a-entity>
 
@@ -622,6 +654,7 @@ splashScreen.addEventListener('click', () => {
           text-typing="restart-delay: 5000"
           font="mozillavr"
         material="side: double;"
+		onclick="speak('my aching heart beats for times past as if I were there, and maybe one day my rose tinted glasses will shatter.')"
         ></a-text>
         </a-entity>
         
