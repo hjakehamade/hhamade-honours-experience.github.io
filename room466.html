@@ -18,6 +18,29 @@
     <script src="animatepng.js"></script>
       <script src="animatepng2.js"></script>
       <script src="animatepng3.js"></script>
+      
+    <!-- SPEECH SYNTHESIS -->
+     <script>
+function speak(text) {
+  var synth = window.speechSynthesis;
+  var chunks = text.match(/[^\.!\?]+[\.!\?]+/g); // split the text into full sentences
+  var currentChunk = 0;
+  
+  if (!synth.speaking) { // check if the speech has ended before starting a new one
+    var utterance = new SpeechSynthesisUtterance(chunks[currentChunk]);
+
+    utterance.onend = function() {
+      currentChunk++;
+      if (currentChunk < chunks.length) {
+        utterance.text = chunks[currentChunk];
+        synth.speak(utterance);
+      }
+    };
+
+    synth.speak(utterance);
+  }
+}
+</script>	  
     
     <!---VERTICAL PITCH touch controls--->
     <script>
@@ -44,6 +67,571 @@
           init: function () {
             this.onClick = this.onClick.bind(this);
           },
+          play: function () {
+            window.addEventListener('click', this.onClick);
+          },
+          pause: function () {
+            window.removeEventListener('click', this.onClick);
+          },
+          onClick: function (evt) {
+            var videoEl = this.el.getAttribute('material').src;
+            if (!videoEl) { return; }
+            this.el.object3D.visible = true;
+            videoEl.play();
+          }
+        });
+    </script> 
+    
+    
+    <!--- GOTO SCRIPT --->
+    <script>
+      AFRAME.registerSystem("goto", {
+        init: function() {
+          // global - shared between all goto components
+          this.isMoving = false;
+        }
+      });
+
+      AFRAME.registerComponent("goto", {
+        init: function() {
+          let rig = document.querySelector('#pov')
+          rig.addEventListener('animationcomplete', e=> {
+            this.system.isMoving = false
+          })
+          this.el.addEventListener("click", e => {
+            if (this.system.isMoving) return;
+            let targetPos = this.el.getAttribute("position")
+            let rigPos = rig.getAttribute("position")
+            this.system.isMoving = true
+            
+            
+            rig.setAttribute("animation", {
+              "from": rigPos,
+              "to": AFRAME.utils.coordinates.stringify({x: targetPos.x, y: rigPos.y, z: targetPos.z}),
+              "dur": targetPos.distanceTo(rigPos) * 200
+            })
+            rig.emit('go')
+          });
+        }
+      });
+    </script>
+    
+    
+    
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    
+    <!---LINK TRAVERSAL-->
+    <script>
+    AFRAME.registerComponent('link-url', {
+          schema: {url: {default: ''},},
+
+          init: function () {
+            var url = this.data.url;
+            this.el.addEventListener('click', function () {
+              window.location.href = url;
+            });
+          }
+        });
+    </script>
+
+  </head>
+ 
+    
+
+   <body>
+       
+  <script>
+// create the splash screen element
+const splashScreen = document.createElement('div');
+splashScreen.style.position = 'fixed';
+splashScreen.style.top = '0';
+splashScreen.style.left = '0';
+splashScreen.style.width = '100%';
+splashScreen.style.height = '100%';
+splashScreen.style.backgroundColor = 'rgba(0,0,0,0.7)';
+splashScreen.style.zIndex = '9999';
+
+// add the instructions to the splash screen
+const instructions = document.createElement('div');
+instructions.style.color = '#fff';
+instructions.style.textAlign = 'center';
+instructions.style.marginTop = '50vh';
+instructions.style.transform = 'translateY(-50%)';
+instructions.style.fontSize = '24px';
+instructions.style.fontWeight = 'bold';
+
+const line1 = document.createElement('p');
+line1.innerText = 'This is an interactive gallery application';
+instructions.appendChild(line1);
+
+const line2 = document.createElement('p');
+line2.innerText = '...';
+instructions.appendChild(line2);
+
+const line3 = document.createElement('p');
+line3.innerText = 'click anywhere to begin';
+instructions.appendChild(line3);
+
+splashScreen.appendChild(instructions);
+
+// add the splash screen to the body
+document.body.appendChild(splashScreen);
+
+// create the audio element
+const audioElement = new Audio('gallerysound.mp3');
+audioElement.loop = true;
+
+// add an event listener to the splash screen to start the audio and remove the splash screen on click
+splashScreen.addEventListener('click', () => {
+  audioElement.play();
+  splashScreen.remove();
+});
+</script>     
+       
+       
+       
+    <a-scene
+             >
+      <!-- Asset Management System-->
+
+      <a-assets>
+        <a-asset-item
+          id="gallery"
+          src="Room2.gltf"
+        ></a-asset-item>
+        <a-asset-item
+          id="gallerygeometry"
+          src="Room2ground.gltf"
+        ></a-asset-item> 
+        
+        <a-asset-item
+          id="computer"
+          src="computer.gltf"
+        ></a-asset-item>
+          
+        <a-asset-item
+          id="computer2"
+          src="computer2.gltf"
+        ></a-asset-item>
+        
+        <video id="tomato" 
+               src="Tomato1.mp4" 
+               webkit-playsinline autoplay loop="true">
+        </video>
+        
+      </a-assets>
+    
+      <!--CAMERA-->
+
+<a-entity 
+          rotation="0 0 0">
+     <a-entity position="0 0 0" 
+               rotation="0 0 0" 
+               id="pov" 
+               animation="property: 
+                          position; 
+                          startEvents: go">
+  <a-camera look-controls wasd-controls-enabled="true">
+    <a-entity cursor="rayOrigin: mouse" 
+              ></a-entity>
+  </a-camera>
+</a-entity>
+</a-entity>
+    
+
+        
+
+      <!-- Scene -->
+
+    <a-entity position="0 0 1"
+              scale="0.8 0.8 0.8"
+              >
+    <a-entity gltf-model="#gallery"  
+              shadow="cast: true; receive: true"  
+              rotation="0 0 0"
+              >
+        </a-entity>
+    </a-entity>
+
+        
+
+     <a-entity class="clickable"
+               scale="0.8 0.8 0.8"
+          gltf-model="#gallerygeometry"
+          id="Geometry"
+          shadow="cast: false; receive: false" 
+          position="0 0.08 1" 
+          material="opacity: 0;"
+          >
+        </a-entity>
+
+        <a-sky
+               src="bsod.png"
+               material="repeat: 4 4"
+                animation="property: rotation;
+                            easing: linear;
+                             to: 0 360 0;
+                            dur: 1000;
+                            loop: true;
+                            "
+               
+               ></a-sky>
+        
+      <a-entity >
+            <a-entity>
+                <a-video playsinline 
+                         webkitplaysinline
+                         src="#tomato"
+                         scale="1.5 1.5"
+                         width="3.9" 
+                         height="2.87"
+                         rotation="8 -90 0" 
+                         position="10.093 1.8 -5.442"
+                         play-on-click="true"
+                         animation="property: position;
+                            to: 10.093 2 -5.442;
+                            easing: easeInOutQuad;
+                            dur: 800;
+                            loop: true;
+                            dir: alternate"
+                         ></a-video>
+
+            </a-entity>
+        </a-entity>
+        
+        
+        
+        
+        
+        <a-plane
+                position="7.6 1.2 -2.3"
+                rotation="0 -130 0"
+                color="white"
+                scale="0.5 0.5"
+                geometry="primitive: plane; width: 2.6; height: 0.6;"
+                align="left"
+                anchor="center"
+                text="value: untitled rot
+                      
+                       video mp4
+                       december 3 2022;
+                      color: black;"
+                 shader="msdf"
+                 onclick="speak('untitled rot, video MP4, december third 2022.')">
+        
+        </a-plane>
+        
+        <a-entity>
+  <script id="text-typing2" type="text/javascript">
+    AFRAME.registerComponent("text-typing", {
+      init: function () {
+        var textEl = this.el;
+        var text = textEl.getAttribute("value");
+        textEl.setAttribute("value", "");
+        var index = 0;
+        var interval;
+        var restartDelay = textEl.getAttribute("restart-delay") || 0;
+
+        function typeText() {
+          interval = setInterval(function () {
+            if (index < text.length) {
+              textEl.setAttribute(
+                "value",
+                textEl.getAttribute("value") + text.charAt(index)
+              );
+              index++;
+            } else {
+              clearInterval(interval);
+              setTimeout(function () {
+                index = 0;
+                textEl.setAttribute("value", "");
+                typeText();
+              }, restartDelay);
+            }
+          }, 100);
+        }
+
+        typeText();
+      },
+    });
+  </script>
+  <a-text
+    id="your-text-id2"
+    scale="2 2 2"
+    position="1.5 2.8 -5"
+    rotation="0 -0 0"
+    anchor="center"
+    align="center"
+    value="-> -> -> -> -> -> -> -> -> -> -> ->"
+    text-typing="restart-delay: 5000"
+    font="mozillavr"
+    color="#FF6700"
+    width="4"
+    visible="true"
+  ></a-text>
+</a-entity>
+        
+<a-image src="cactus.png"
+       position="2.5 1.6 -5"
+        rotation="6 0 0"
+       scale="1 1 1"
+       ></a-image>
+<a-plane
+                position="3.5 1.25 -5.08"
+        rotation="0 0 0"
+                color="white"
+                scale="0.3 0.3"
+                geometry="primitive: plane; width: 2.6; height: 0.6;"
+                align="left"
+                anchor="center"
+                text="value: untitled christmas cactus 
+                      
+                       pencil crayon & watercolour
+                       march 9 2023;
+                      color: black;"
+                 shader="msdf"
+                onclick="speak('untitled christmas cactus, pencil crayon and watercolour, march ninth 2023.')"
+         >
+        
+        </a-plane>
+        
+        
+<a-image src="tomato.png"
+       position="0 1.6 -5"
+        rotation="6 0 0"
+       scale="1.5 1.5 1.5"
+       ></a-image>
+<a-plane
+                position="1.2 1. -5.08"
+        rotation="0 0 0"
+                color="white"
+                scale="0.3 0.3"
+                geometry="primitive: plane; width: 2.6; height: 0.6;"
+                align="left"
+                anchor="center"
+                text="value: untitled tomato
+                      
+                       pencil crayon & watercolour
+                       february 15 2023;
+                      color: black;"
+                 shader="msdf"
+                onclick="speak('untitled tomato, pencil crayon and watercolour, february fifteenth 2023.')">
+        
+        </a-plane> 
+        
+        
+        
+        <a-entity gltf-model="#computer2"
+                  position="2.7 1 -6.9"
+                  shadow="cast: true;
+                          recieve: true;"
+               scale="1.1 1.1 1.1"
+                  rotation="0 -80 0"
+                  
+                >
+        </a-entity>
+        
+
+        <a-entity position="3.6 1.05 -6.2"
+                  rotation="-10 200 20"
+                  scale="0.15 0.15 0.15">
+                <a-entity
+                  gltf-model="heart.gltf"
+                  shadow="cast: true;
+                          recieve: true;"
+                  animation="property: scale;
+                            easing: easeInOutCubic;
+                             from: 1 1 1;
+                             to: 1.05 1.2 1;
+                            dur: 700;
+                            loop: true;
+                             dir: alternate;
+                            ">
+                </a-entity>
+            </a-entity>
+        <a-box
+               position="3 0.2 -7"
+               scale="2 1.5 2"
+               color="grey"
+               ></a-box>
+        <a-plane
+                position="4.01 0.5 -7"
+                rotation="0 90 0"
+                color="white"
+                scale="0.5 0.5"
+                geometry="primitive: plane; width: 2.6; height: 0.6;"
+                align="left"
+                anchor="center"
+                text="value: untitled heartbeat
+                      
+                       a-frame gltf model render
+                       april 5 2023;
+                      color: black;"
+                 shader="msdf"
+                 onclick="speak('untitled heartbeat, A-frame GLTF model, april fifth 2023.')">
+        </a-plane>
+           
+
+   
+      
+      
+      
+    <!--LINKS-->
+    <a-text href="hallway.html" 
+        position="-0 0.8 .5" 
+        rotation="0 180 0" 
+        color="blue"  
+        scale=".5 .5 .5" 
+        value="Click to Exit Room 466"
+        geometry="primitive: plane; width: 2.5; height: 0.5;"
+        material="color: #b7beff;"
+        align=  "center"
+            ></a-text>
+
+
+
+        
+        
+        <script>
+  var canClick = true; // Set initial click state to true
+  var cooldownTime = 300; // Set cooldown time in milliseconds
+  var isMouseDown = false; // Set initial mouse state to false
+  var mouseUpEvent = new Event('mouseup'); // Create mouseup event
+
+  document.querySelectorAll('.clickable').forEach(function(el) {
+    el.addEventListener('mousedown', function () {
+      isMouseDown = true; // Set mouse state to true when clicked down
+    });
+
+    el.addEventListener('mouseup', function (event) {
+      if (isMouseDown && canClick) {
+        var intersection = event.detail.intersection;
+        var distance = intersection.distance;
+        // Minimize accidental clicks by checking if the click was within a reasonable distance from the camera
+        if (distance < 10) {
+          var newPosition = intersection.point;
+          newPosition.y = 1.6; // Adjust the camera height to your liking
+          document.querySelector('a-camera').setAttribute('animation', 'property: position; to: ' + newPosition.x + ' ' + newPosition.y + ' ' + newPosition.z + '; dur: 500');
+
+          canClick = false; // Set click state to false
+          setTimeout(function () {
+            canClick = true; // Reset click state to true after cooldown
+          }, cooldownTime);
+        }
+      }
+      isMouseDown = false; // Reset mouse state to false on click up
+    });
+
+    el.addEventListener('mouseleave', function () {
+      if (isMouseDown) {
+        el.dispatchEvent(mouseUpEvent); // Trigger mouseup event if mouse leaves clickable area while still clicked down
+      }
+      isMouseDown = false; // Reset mouse state to false on mouse leave
+    });
+  });
+  
+  document.querySelectorAll('a-text').forEach(function(el) {
+    el.addEventListener('click', function () {
+      var href = this.getAttribute('href');
+      if (href && href !== 'null') {
+        window.location.href = href;
+        canClick = false; // Set click state to false
+        setTimeout(function () {
+          canClick = true; // Reset click state to true after cooldown
+        }, cooldownTime);
+      }
+    });
+  });
+</script>
+
+         
+        
+        <!-- Ambient Light -->
+         <a-light type="ambient" 
+                  color="#222"></a-light>
+
+
+      <a-light
+        color="#fff4e9"
+        position="-0 2 0"
+        type="point"
+        intensity="0.5"
+        penumbra="0.3"
+        distance="6"
+      ></a-light>
+        <a-light
+        color="#fff4e9"
+        position="-0 2 -2"
+        type="point"
+        intensity="0.5"
+        penumbra="0.3"
+        distance="6"
+      ></a-light>
+        <a-light
+        color="#fff4e9"
+        position="-0 2 -3.5"
+        type="point"
+        intensity="0.5"
+        penumbra="0.3"
+        distance="6"
+      ></a-light>
+        <a-light
+        color="blue"
+        position="3 2 -3.5"
+        type="point"
+        intensity="0.5"
+        penumbra="0.3"
+        distance="6"
+      ></a-light>
+        
+        <a-light
+        color="blue"
+        position="9.093 2 -5.442"
+        type="point"
+        intensity="1"
+        penumbra="0.6"
+        distance="10"
+      ></a-light>
+        
+        <a-light
+        color="blue"
+        position="5 2 -3.5"
+        type="point"
+        intensity="0.5"
+        penumbra="0.3"
+        distance="6"
+      ></a-light>
+        <a-light
+        color="blue"
+        position="2 2 -7"
+        type="point"
+        intensity="1"
+        penumbra="0.3"
+        distance="6"
+      ></a-light>
+        <a-light
+        color="yellow"
+        position="3.4 2 -7"
+        type="spot"
+        rotation="-80 90 0"
+        intensity="1"
+        penumbra="0.6"
+        distance="4"
+      ></a-light>
+        <a-light
+        color="white"
+        position="3.4 2 -7"
+        type="point"
+        rotation="-80 90 0"
+        intensity="0.5"
+        penumbra="0.6"
+        distance="4"
+      ></a-light>
+        
+    </a-scene>          
+  </body>
+</html>
           play: function () {
             window.addEventListener('click', this.onClick);
           },
