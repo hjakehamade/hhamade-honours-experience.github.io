@@ -111,12 +111,67 @@
           }
         });
     </script>
+      
+      
+      
+      
+      
+      
 
   </head>
  
   
   
    <body>
+       
+        <script>
+// create the splash screen element
+const splashScreen = document.createElement('div');
+splashScreen.style.position = 'fixed';
+splashScreen.style.top = '0';
+splashScreen.style.left = '0';
+splashScreen.style.width = '100%';
+splashScreen.style.height = '100%';
+splashScreen.style.backgroundColor = 'rgba(0,0,0,0.7)';
+splashScreen.style.zIndex = '9999';
+
+// add the instructions to the splash screen
+const instructions = document.createElement('div');
+instructions.style.color = '#fff';
+instructions.style.textAlign = 'center';
+instructions.style.marginTop = '50vh';
+instructions.style.transform = 'translateY(-50%)';
+instructions.style.fontSize = '24px';
+instructions.style.fontWeight = 'bold';
+
+const line1 = document.createElement('p');
+line1.innerText = 'This is an interactive gallery application';
+instructions.appendChild(line1);
+
+const line2 = document.createElement('p');
+line2.innerText = '...';
+instructions.appendChild(line2);
+
+const line3 = document.createElement('p');
+line3.innerText = 'click anywhere to begin';
+instructions.appendChild(line3);
+
+splashScreen.appendChild(instructions);
+
+// add the splash screen to the body
+document.body.appendChild(splashScreen);
+
+// create the audio element
+const audioElement = new Audio('gallerysound3.mp3');
+audioElement.loop = true;
+
+// add an event listener to the splash screen to start the audio and remove the splash screen on click
+splashScreen.addEventListener('click', () => {
+  audioElement.play();
+  splashScreen.remove();
+});
+</script>     
+       
     <a-scene
              >
       <!-- Asset Management System-->
@@ -130,29 +185,17 @@
           id="gallerygeometry"
           src="room470geometry.gltf"
         ></a-asset-item>
-          
-          
-          
-        <video muted id="snail" src="Snail1.mp4" webkit-playsinline autoplay loop="true">
-        </video>
-        
-        <a-audio id="ambient" src="https://d7d3471nr939s.cloudfront.net/VisionaryElements_Noiiz/MP3/Loops/Drones/93_F_ConfuseChrdDrone_308_01.mp3?cb=e7aec728-f30e-49f1-ad67-45ab46272b52">
-        </a-audio>
 
         <a-asset-item
-          id="soda"
-          src="soda.gltf"
+          id="filingcabinet1"
+          src="filingcabinet1.gltf"
         ></a-asset-item>
-          
         <a-asset-item
-          id="sculpture2"
-          src="Sculpture2.gltf"
+          id="filingcabinet2"
+          src="filingcabinet2.gltf"
         ></a-asset-item>
-          
-        <a-asset-item
-          id="computer"
-          src="computer.gltf"
-        ></a-asset-item>
+
+
 
       </a-assets>
     
@@ -178,7 +221,7 @@
 
       <!-- Scene -->
       <a-entity gltf-model="#gallery" 
-                shadow="cast: false; receive: false" 
+                shadow="cast: true; receive: true" 
                 position="0 0 0" 
                 rotation="0 -90 0"
                 >
@@ -196,23 +239,178 @@
         
 
 
-    <a-entity gltf-model="#soda"
-              scale=".3 .3 .3"
-              position=" 3 1 -4"
-              animation="property: rotation;
-                         to: 0 360 0;
-                         loop: true;
-                         easing: linear;
-                         dur: 5900;"
-              
+    <a-entity gltf-model="#filingcabinet1"
+              scale="1.5 1.5 1.5"
+              position=" 5 0.3 -5"
+              rotation="-90 45 0"
+              ></a-entity>
+    <a-entity gltf-model="#filingcabinet2"
+              scale="1.5 1.5 1.5"
+              position=" 4 0.02 -3"
+               rotation="0 -45 0"
+              ></a-entity>
+        <a-entity gltf-model="#filingcabinet2"
+              scale="1.5 1.5 1.5"
+              position=" 3.1 0.02 -2"
+                rotation="0 -35 0"
+              ></a-entity>
+        <a-entity gltf-model="#filingcabinet2"
+              scale="1.5 1.5 1.5"
+              position=" 3 0.02 -1"
+              ></a-entity>
+        <a-entity gltf-model="#filingcabinet2"
+              scale="1.5 1.5 1.5"
+              position=" 3 0.02 0"
+                rotation="0 -15 0"
+              ></a-entity>
+            <a-entity gltf-model="#filingcabinet2"
+              scale="1.5 1.5 1.5"
+              position=" 3 1.1 -0.5"
+                      rotation="0 45 0"
+              ></a-entity>
+            <a-entity gltf-model="#filingcabinet2"
+              scale="1.5 1.5 1.5"
+              position=" 3 1.1 -1.5"
+                      rotation="0 30 0"
+              ></a-entity>
+            <a-entity gltf-model="#filingcabinet1"
+              scale="1.5 1.5 1.5"
+              position=" 3 2.2 -1"
+                      rotation="0 -30 0"
               ></a-entity>
         
         
        <a-sky
-               src="bsod.png"
                animate-png2></a-sky>
+        
+<a-entity animation="property: position;
+                     to: 6 0 -3; 
+                             loop: true; 
+                             dur: 10000; 
+                             easing: easeInOutCubic;
+                            dir: alternate;"
+          >
+        
+<a-entity position="4 2.5 -6"
+          animation="property: rotation; 
+                             to: 90 360 0; 
+                             loop: true; 
+                             dur: 10000; 
+                             easing: easeInOutCubic;
+                            dir: alternate;">     
+            <a-entity position="2 0 -1">
+        <a-entity animation="property: rotation; 
+                             to: 0 180 0; 
+                             loop: true; 
+                             dur: 15000; 
+                             easing: easeInOutCubic;
+                             dir: alternate"
+                            >     
+            <a-entity position="1 0 0">
+                <a-sphere
+                        material="shader: flat; opacity: 0.5; color: yellow;"
+                          scale="0.3 0.3 0.3"
+                          light="type: point; 
+                                 intensity: 3; 
+                                 distance: 4; 
+                                 decay: 2;
+                                 color: yellow"
+                                
+                          position="0 0 0"
+                          ></a-sphere>
+                <a-sphere
+                        material="shader: flat; color: orange; emissive: yellow; emissiveIntensity: 0.5"
+                        scale="0.25 0.25 0.25"
+                        shadow="cast: false; receive: false"
+                          position="0 0 0"
+                        ></a-sphere>
+            </a-entity>
+            </a-entity> 
+            </a-entity>
+</a-entity>
+<a-entity position="4 2.5 -6"
+          animation="property: rotation; 
+                             to: -90 360 0; 
+                             loop: true; 
+                             dur: 15000; 
+                             easing: easeInOutCubic;
+                            dir: alternate;">     
+            <a-entity position="2 0 1">
+        <a-entity animation="property: rotation; 
+                             to: 0 -360 0; 
+                             loop: true; 
+                             dur: 10000; 
+                             easing: linear">     
+            <a-entity position="1 0 1">
+                <a-sphere
+                        material="shader: flat; opacity: 0.5; color: blue;"
+                          scale="0.35 0.35 0.35"
+                          light="type: point; 
+                                 intensity: 3; 
+                                 distance: 4; 
+                                 decay: 2;
+                                 color: blue"
+                                
+                          position="0 0 0"
+                          ></a-sphere>
+                <a-sphere
+                        material="shader: flat; color: purple; emissive: blue; emissiveIntensity: 0.5"
+                        scale="0.3 0.3 0.3"
+                        shadow="cast: false; receive: false"
+                          position="0 0 0"
+                        ></a-sphere>
+            </a-entity>
+            </a-entity> 
+            </a-entity>
+</a-entity>
+<a-entity position="4 2.5 -6"
+          animation="property: rotation; 
+                             to: 90 360 0; 
+                             loop: true; 
+                             dur: 25000; 
+                             easing: easeInOutCubic;
+                            dir: alternate;">     
+            <a-entity position="2 0 1">
+        <a-entity animation="property: rotation; 
+                             to: 0 360 0; 
+                             loop: true; 
+                             dur: 20000; 
+                             easing: linear">     
+            <a-entity position="1 0 1">
+                <a-sphere
+                        material="shader: flat; opacity: 0.5; color: red;"
+                          scale="0.25 0.25 0.25"
+                          light="type: point; 
+                                 intensity: 3; 
+                                 distance: 5; 
+                                 decay: 2;
+                                 color: red"
+                                
+                          position="0 0 0"
+                          ></a-sphere>
+                <a-sphere
+                        material="shader: flat; color: purple; emissive: red; emissiveIntensity: 0.5"
+                        scale="0.2 0.2 0.2"
+                        shadow="cast: false; receive: false"
+                          position="0 0 0"
+                        ></a-sphere>
+            </a-entity>
+            </a-entity> 
+            </a-entity>
+</a-entity>
+        
+        
+</a-entity>
       
       
+
+<a-entity light="type: point;
+                color: white;
+                intensity: 0.1"
+          position="0 1 0">
+</a-entity>
+
+        
       
     <!--LINKS-->
 	<a-text href="hallway.html" 
@@ -230,61 +428,13 @@
 
         
         
-        <script>
-  var canClick = true; // Set initial click state to true
-  var cooldownTime = 300; // Set cooldown time in milliseconds
-  var isMouseDown = false; // Set initial mouse state to false
-  var mouseUpEvent = new Event('mouseup'); // Create mouseup event
-            
-    
-    document.querySelector('a-text').addEventListener('click', function () {
-  if (canClick) {
-    window.location.href = this.getAttribute('href');
-    canClick = false; // Set click state to false
-    setTimeout(function () {
-      canClick = true; // Reset click state to true after cooldown
-    }, cooldownTime);
-  }
-});
-
-  document.querySelectorAll('.clickable').forEach(function(el) {
-    el.addEventListener('mousedown', function () {
-      isMouseDown = true; // Set mouse state to true when clicked down
-    });
-
-    el.addEventListener('mouseup', function (event) {
-      if (isMouseDown && canClick) {
-        var intersection = event.detail.intersection;
-        var distance = intersection.distance;
-        // Minimize accidental clicks by checking if the click was within a reasonable distance from the camera
-        if (distance < 10) {
-          var newPosition = intersection.point;
-          newPosition.y = 1.6; // Adjust the camera height to your liking
-          document.querySelector('a-camera').setAttribute('animation', 'property: position; to: ' + newPosition.x + ' ' + newPosition.y + ' ' + newPosition.z + '; dur: 500');
-
-          canClick = false; // Set click state to false
-          setTimeout(function () {
-            canClick = true; // Reset click state to true after cooldown
-          }, cooldownTime);
-        }
-      }
-      isMouseDown = false; // Reset mouse state to false on click up
-    });
-
-    el.addEventListener('mouseleave', function () {
-      if (isMouseDown) {
-        el.dispatchEvent(mouseUpEvent); // Trigger mouseup event if mouse leaves clickable area while still clicked down
-      }
-      isMouseDown = false; // Reset mouse state to false on mouse leave
-    });
-  });
-</script>
+<script src="clickable.js"></script>
          
         
         <!-- Ambient Light -->
         <a-entity light="type: ambient;
-                         color: #BBB
-                         intensity: 0.2">
+                         color: grey;
+                         intensity: 0.05">
         </a-entity>
 
     </a-scene>          
