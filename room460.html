@@ -437,6 +437,34 @@ splashScreen.addEventListener('click', () => {
         
         
     </a-scene>
+	  
+	   <!-- Button to refresh the page -->
+ <div>
+  <button onclick="location.reload()"
+          id="refresh-btn">Regenerate Experience</button>
+</div>
+<style>
+  #refresh-btn {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 1.2rem;
+    padding: 0.5rem 1rem;
+    border-radius: 10px;
+    border: none;
+    background-color: #333;
+    color: #fff;
+    cursor: pointer;
+  }
+
+  #refresh-btn:hover {
+    background-color: #555;
+  }
+</style>
+	  
+	  
+	  
   </body>
 </html>
 
