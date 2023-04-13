@@ -1,0 +1,73 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>A-Frame Random Texture</title>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script>
+      // Define the array of texture images
+      var textures = [
+        "#texture1",
+        "#texture2",
+        "#texture3",
+        "#texture4"
+      ];
+
+      // Define the array of models
+      var models = [
+        "#model1",
+        "#model2",
+        "#model3",
+        "#model4"
+      ];
+
+      // Function to randomly select a texture from the array
+      function chooseRandomTexture() {
+        var randomIndex = Math.floor(Math.random() * textures.length);
+        return textures[randomIndex];
+      }
+
+      // Function to randomly select a model from the array
+      function chooseRandomModel() {
+        var randomIndex = Math.floor(Math.random() * models.length);
+        return models[randomIndex];
+      }
+
+      // Function to set a random texture and model to the ground object
+      function setRandomModel() {
+        var objModel = document.querySelector("#ground");
+        objModel.setAttribute("src", chooseRandomModel());
+        objModel.setAttribute("material", "src: " + chooseRandomTexture() + "; repeat: 6 6; side: double");
+      }
+    </script>
+  </head>
+  <body>
+    <a-scene>
+      <a-assets>
+        <!-- Load all the texture images -->
+        <img id="texture1" src="texture1.jpg" />
+        <img id="texture2" src="texture2.jpg" />
+        <img id="texture3" src="texture3.jpg" />
+        <img id="texture4" src="texture4.jpg" />
+        <!-- Load all the obj models -->
+        <a-asset-item id="model1" src="ground1.obj"></a-asset-item>
+        <a-asset-item id="model2" src="ground2.obj"></a-asset-item>
+        <a-asset-item id="model3" src="ground3.obj"></a-asset-item>
+        <a-asset-item id="model4" src="ground4.obj"></a-asset-item>
+      </a-assets>
+
+      <a-obj-model
+        id="ground"
+        src="#model1"
+        position="0 0 -5"
+        rotation="0 0 0"
+        scale="1 1 1"
+      ></a-obj-model>
+
+      <script>
+        // Set a random texture and model on load
+        setRandomModel();
+      </script>
+    </a-scene>
+  </body>
+</html>
