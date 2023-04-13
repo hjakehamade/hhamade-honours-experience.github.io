@@ -352,32 +352,6 @@ splashScreen.addEventListener('click', () => {
        setRandomSky>
 </a-sky>
 
-<script>
-  var scene = document.querySelector("a-scene");
-  var sky = document.querySelector("a-sky");
-
-  // Function to randomly choose true or false
-  function getRandomBoolean() {
-    return Math.random() < 0.5;
-  }
-
-  // Function to set the fog property
-  function setFog() {
-    var fogValue = getRandomBoolean();
-    var fogColor = "#" + ((1 << 24) * Math.random() | 0).toString(16); // Random hex color
-    sky.setAttribute("material", "fog: " + fogValue);
-    scene.setAttribute("fog", "type: linear; color: " + fogColor + "; far: 30; near: 2; enabled: " + fogValue);
-  }
-
-  // Call the function initially
-  setFog();
-</script>
-
-
-
-        
-        
-
       <script>
         // Set a random texture and model on load
         setRandomModel();
