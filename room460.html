@@ -1,0 +1,445 @@
+<html>
+  <head>
+
+    <!--    Place the script for aframe here     -->
+    <script src="aframe.min.js"></script>
+    <!-- Link Clicking -->
+    <script src="aframe-href-component.min.js"></script>
+    <!--     Place the script for aframe extras here -->
+    <script src="aframe-extras.js"></script>
+    <!--     Place the script for the environment component here -->
+    <script src="aframe-environment-component.min.js"></script>
+    <!--    Event Waypoint Script -->
+    <script src="aframe-particle-system-component.min.js"></script>  
+    <script src="aframe-event-set-component.min.js"></script>
+
+    <!-- ANIMATE PNG-->
+    <script src="animatepng.js"></script>
+      <script src="animatepng2.js"></script>
+      <script src="animatepng3.js"></script>
+    
+    <!---VERTICAL PITCH touch controls--->
+    <script>
+    
+    AFRAME.components["look-controls"].Component.prototype.onTouchMove = function (t) {
+                        var PI_2 = Math.PI/2,
+                        e,
+                        o = this.el.sceneEl.canvas,
+                        i = this.yawObject,
+                        j = this.pitchObject;
+                        this.touchStarted && this.data.touchEnabled && (e = 2 * Math.PI * (t.touches[0].pageX - this.touchStart.x) / o.clientWidth, f = 2 * Math.PI * (t.touches[0].pageY - this.touchStart.y) / o.clientHeight, j.rotation.x += .3 * f, i.rotation.y += .5 * e, j.rotation.x = Math.max(-PI_2, Math.min(PI_2, j.rotation.x)), this.touchStart = {
+                                x: t.touches[0].pageX,
+                                y: t.touches[0].pageY
+                            })
+                        }
+
+    
+    </script>
+    
+    
+    <!--IOS VIDEO COMPATABILITY-->
+    <script>
+        AFRAME.registerComponent('play-on-click', {
+          init: function () {
+            this.onClick = this.onClick.bind(this);
+          },
+          play: function () {
+            window.addEventListener('click', this.onClick);
+          },
+          pause: function () {
+            window.removeEventListener('click', this.onClick);
+          },
+          onClick: function (evt) {
+            var videoEl = this.el.getAttribute('material').src;
+            if (!videoEl) { return; }
+            this.el.object3D.visible = true;
+            videoEl.play();
+          }
+        });
+    </script> 
+    
+    
+    <!--- GOTO SCRIPT --->
+    <script>
+      AFRAME.registerSystem("goto", {
+        init: function() {
+          // global - shared between all goto components
+          this.isMoving = false;
+        }
+      });
+
+      AFRAME.registerComponent("goto", {
+        init: function() {
+          let rig = document.querySelector('#pov')
+          rig.addEventListener('animationcomplete', e=> {
+            this.system.isMoving = false
+          })
+          this.el.addEventListener("click", e => {
+            if (this.system.isMoving) return;
+            let targetPos = this.el.getAttribute("position")
+            let rigPos = rig.getAttribute("position")
+            this.system.isMoving = true
+            
+            
+            rig.setAttribute("animation", {
+              "from": rigPos,
+              "to": AFRAME.utils.coordinates.stringify({x: targetPos.x, y: rigPos.y, z: targetPos.z}),
+              "dur": targetPos.distanceTo(rigPos) * 200
+            })
+            rig.emit('go')
+          });
+        }
+      });
+    </script>
+    
+    
+    
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    
+    <!---LINK TRAVERSAL-->
+    <script>
+    AFRAME.registerComponent('link-url', {
+          schema: {url: {default: ''},},
+
+          init: function () {
+            var url = this.data.url;
+            this.el.addEventListener('click', function () {
+              window.location.href = url;
+            });
+          }
+        });
+    </script>
+
+      <script>
+      // Define the array of texture images
+      var textures = [
+        "#texture1",
+        "#texture2",
+        "#texture3",
+        "#texture4",
+        "#texture5",
+        "#texture6",
+        "#texture7",
+        "#texture8",
+        "#texture9",
+        "#texture10",
+        "#texture11",
+        "#texture12",
+        "#texture13",
+        "#texture14" 
+      ];
+
+      // Define the array of models
+      var models = [
+        "#model1",
+        "#model2",
+        "#model3",
+        "#model4"
+      ];
+    
+      // Define the array of sky texture images
+      var skies = [
+        "#sky1",
+        "#sky2",
+        "#sky3",
+        "#sky4",
+        "#sky5",
+        "#sky6"
+      ];
+
+      // Function to randomly select a ground texture from the array
+      function chooseRandomTexture() {
+        var randomIndex = Math.floor(Math.random() * textures.length);
+        return textures[randomIndex];
+      }
+
+      // Function to randomly select a model from the array
+      function chooseRandomModel() {
+        var randomIndex = Math.floor(Math.random() * models.length);
+        return models[randomIndex];
+      }
+        
+     // Function to randomly select a sky texture from the array
+      function chooseRandomSky() {
+        var randomIndex = Math.floor(Math.random() * skies.length);
+        return skies[randomIndex];
+      }
+
+
+      // Function to set a random texture and model to the ground object
+      function setRandomModel() {
+        var objModel = document.querySelector("#ground");
+        objModel.setAttribute("src", chooseRandomModel());
+        objModel.setAttribute("material", "src: " + chooseRandomTexture() + "; repeat: 6 6; side: double");
+      }
+     // Function to randomly set the sky texture
+      function setRandomSky() {
+        var sky = document.querySelector("a-sky");
+        sky.setAttribute("material", "src: " + chooseRandomSky() + "; repeat: 1 1");
+      }
+
+      // On page load, set the sky to a random texture
+      window.onload = setRandomSky;
+
+       // Function to generate a random number between min and max
+      function getRandomNumber(min, max) {
+        return Math.random() * (max - min) + min;
+      }
+
+      // Function to generate a random position within the given range
+      function getRandomPosition(range) {
+        return [
+          getRandomNumber(-range, range),
+          getRandomNumber(-range, range),
+          getRandomNumber(-range, range)
+        ];
+      }
+
+      // Function to generate a random scale within the given range
+      function getRandomScale(min, max) {
+        var scale = getRandomNumber(min, max);
+        return [scale, scale, scale];
+      }
+      
+      </script>
+  </head>
+  <body >
+      
+      <script>
+// create the splash screen element
+const splashScreen = document.createElement('div');
+splashScreen.style.position = 'fixed';
+splashScreen.style.top = '0';
+splashScreen.style.left = '0';
+splashScreen.style.width = '100%';
+splashScreen.style.height = '100%';
+splashScreen.style.backgroundColor = 'rgba(0,0,0,0.7)';
+splashScreen.style.zIndex = '9999';
+
+// add the instructions to the splash screen
+const instructions = document.createElement('div');
+instructions.style.color = '#fff';
+instructions.style.textAlign = 'center';
+instructions.style.marginTop = '50vh';
+instructions.style.transform = 'translateY(-50%)';
+instructions.style.fontSize = '24px';
+instructions.style.fontWeight = 'bold';
+
+const line1 = document.createElement('p');
+line1.innerText = 'This is an interactive gallery application';
+instructions.appendChild(line1);
+
+const line2 = document.createElement('p');
+line2.innerText = '...';
+instructions.appendChild(line2);
+
+const line3 = document.createElement('p');
+line3.innerText = 'click anywhere to begin';
+instructions.appendChild(line3);
+
+splashScreen.appendChild(instructions);
+
+// add the splash screen to the body
+document.body.appendChild(splashScreen);
+
+// create the audio element
+const audioElement = new Audio('gallerysound2.mp3');
+audioElement.loop = true;
+
+// add an event listener to the splash screen to start the audio and remove the splash screen on click
+splashScreen.addEventListener('click', () => {
+  audioElement.play();
+  splashScreen.remove();
+});
+</script>
+      
+      
+      
+      
+      
+    <a-scene>
+        
+        
+      <a-assets>
+        <!-- Load all the texture images -->
+        <img id="texture1" src="texture1.jpg" />
+        <img id="texture2" src="texture2.jpg" />
+        <img id="texture3" src="texture3.jpg" />
+        <img id="texture4" src="texture4.jpg" />
+        <img id="texture5" src="texture5.jpg" />
+        <img id="texture6" src="texture6.jpg" />
+        <img id="texture7" src="texture7.jpg" />
+        <img id="texture8" src="texture8.jpg" />
+        <img id="texture9" src="texture9.jpg" />
+        <img id="texture10" src="texture10.jpg" />
+        <img id="texture11" src="texture11.jpg" />
+        <img id="texture12" src="texture12.jpg" />
+        <img id="texture13" src="texture13.jpg" /> 
+        <img id="texture14" src="texture14.jpg" /> 
+          
+        <!-- Load all the obj models -->
+        <a-asset-item id="model1" src="ground1.obj"></a-asset-item>
+        <a-asset-item id="model2" src="ground2.obj"></a-asset-item>
+        <a-asset-item id="model3" src="ground3.obj"></a-asset-item>
+        <a-asset-item id="model4" src="ground4.obj"></a-asset-item>
+          
+        <!-- Load all the sky images -->
+        <img id="sky1" src="sky1.jpg" />
+        <img id="sky2" src="sky2.jpg" />
+        <img id="sky3" src="sky3.jpg" />
+        <img id="sky4" src="sky4.jpg" />
+        <img id="sky5" src="sky5.jpg" />
+        <img id="sky6" src="sky6.jpg" />
+      </a-assets>
+
+        
+        
+<!--CAMERA-->
+
+<a-entity 
+          rotation="0 0 0">
+     <a-entity position="0 0 0" 
+               rotation="0 0 0" 
+               id="pov" 
+               animation="property: 
+                          position; 
+                          startEvents: go">
+  <a-camera look-controls wasd-controls-enabled="true">
+    <a-entity cursor="rayOrigin: mouse" 
+              ></a-entity>
+  </a-camera>
+</a-entity>
+</a-entity>
+        
+        
+        
+        <a-circle class="clickable"
+                 material="opacity: 0.2;
+                           transparent: false"
+                 color="black"  
+                 scale="25 25 25"      
+                 rotation="-90 90 0" 
+                 position="0 0.2 0"></a-circle>
+     
+
+        
+      <a-obj-model
+        id="ground"
+        src="#model1"
+        position="0 0 -5"
+        rotation="0 0 0"
+        scale="1 1 1"
+      ></a-obj-model>
+        
+        <a-entity
+                  gltf-model="artlabdoor.gltf"
+                  position="0 0 1"
+                  
+                  ></a-entity>
+        
+
+        
+        
+        
+        <!-- Set the sky to a black color -->
+<a-sky animation="property: rotation;
+             to: 360 360 0;
+             loop: true;
+             easing: linear;
+             dur: 590000;"
+       material="fog: false"
+       setRandomSky>
+</a-sky>
+
+<script>
+  var scene = document.querySelector("a-scene");
+  var sky = document.querySelector("a-sky");
+
+  // Function to randomly choose true or false
+  function getRandomBoolean() {
+    return Math.random() < 0.5;
+  }
+
+  // Function to set the fog property
+  function setFog() {
+    var fogValue = getRandomBoolean();
+    var fogColor = "#" + ((1 << 24) * Math.random() | 0).toString(16); // Random hex color
+    sky.setAttribute("material", "fog: " + fogValue);
+    scene.setAttribute("fog", "type: linear; color: " + fogColor + "; far: 30; near: 2; enabled: " + fogValue);
+  }
+
+  // Call the function initially
+  setFog();
+</script>
+
+
+
+        
+        
+
+      <script>
+        // Set a random texture and model on load
+        setRandomModel();
+      </script>
+        
+<!-- Generate random cubes -->
+<script>
+  var numCubes = Math.floor(Math.random() * 11) + 10;
+  var range = 30;
+  var minScale = 0.5;
+  var maxScale = 2;
+  var minDimension = 1;
+  var maxDimension = 8;
+  var sceneEl = document.querySelector("a-scene");
+  var ground = document.querySelector("#ground");
+  var groundPos = ground.object3D.position;
+
+  function getRandomDimension(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+  
+  for (var i = 0; i < numCubes; i++) {
+    var cube = document.createElement("a-box");
+    cube.setAttribute("material", "src: " + chooseRandomTexture());
+    var pos = getRandomPosition(range);
+    if (pos[1] < groundPos.y + 0.5) { // Prevent spawning below ground
+      pos[1] = groundPos.y + 0.5;
+    }
+    cube.setAttribute("position", pos.join(" "));
+    cube.setAttribute("scale", getRandomScale(minScale, maxScale).join(" "));
+    cube.setAttribute("width", getRandomDimension(minDimension, maxDimension));
+    cube.setAttribute("height", getRandomDimension(minDimension, maxDimension));
+    cube.setAttribute("depth", getRandomDimension(minDimension, maxDimension));
+    sceneEl.appendChild(cube);
+  }
+</script>
+ 
+            <!--LINKS-->
+	<a-text href="hallway.html" 
+        position="0 0.81 1" 
+        rotation="0 180 0" 
+        color="blue"  
+        scale=".5 .5 .5" 
+        value="Click to Exit Room 460"
+        geometry="primitive: plane; width: 2.3; height: 0.5;"
+        material="color: #b7beff;"
+        align=  "center"
+        event-set__down="_event: mousedown; color: #ADD8E6"
+            ></a-text>
+
+
+        
+        
+<script src="clickable.js"></script>
+        
+        
+        
+        
+    </a-scene>
+  </body>
+</html>
+
+
+
+
