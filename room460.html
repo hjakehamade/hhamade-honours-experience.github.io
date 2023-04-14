@@ -127,7 +127,8 @@
         "#texture11",
         "#texture12",
         "#texture13",
-        "#texture14" 
+        "#texture14",
+        "#texture15" 
       ];
 
       // Define the array of models
@@ -135,7 +136,9 @@
         "#model1",
         "#model2",
         "#model3",
-        "#model4"
+        "#model4",
+        "#model5",
+        "#model6"
       ];
     
       // Define the array of sky texture images
@@ -244,7 +247,7 @@ splashScreen.appendChild(instructions);
 document.body.appendChild(splashScreen);
 
 // create the audio element
-const audioElement = new Audio('gallerysound2.mp3');
+const audioElement = new Audio('gallerysound4.mp3');
 audioElement.loop = true;
 
 // add an event listener to the splash screen to start the audio and remove the splash screen on click
@@ -276,13 +279,16 @@ splashScreen.addEventListener('click', () => {
         <img id="texture11" src="texture11.jpg" />
         <img id="texture12" src="texture12.jpg" />
         <img id="texture13" src="texture13.jpg" /> 
-        <img id="texture14" src="texture14.jpg" /> 
+        <img id="texture14" src="texture14.jpg" />
+        <img id="texture15" src="texture15.jpg" /> 
           
         <!-- Load all the obj models -->
         <a-asset-item id="model1" src="ground1.obj"></a-asset-item>
         <a-asset-item id="model2" src="ground2.obj"></a-asset-item>
         <a-asset-item id="model3" src="ground3.obj"></a-asset-item>
         <a-asset-item id="model4" src="ground4.obj"></a-asset-item>
+        <a-asset-item id="model5" src="ground5.obj"></a-asset-item>
+        <a-asset-item id="model6" src="ground6.obj"></a-asset-item>
           
         <!-- Load all the sky images -->
         <img id="sky1" src="sky1.jpg" />
@@ -347,7 +353,7 @@ splashScreen.addEventListener('click', () => {
              to: 360 360 0;
              loop: true;
              easing: linear;
-             dur: 590000;"
+             dur: 190000;"
        material="fog: false"
        setRandomSky>
 </a-sky>
@@ -467,7 +473,4 @@ splashScreen.addEventListener('click', () => {
 	  
   </body>
 </html>
-
-
-
 
