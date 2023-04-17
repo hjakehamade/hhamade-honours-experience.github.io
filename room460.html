@@ -97,118 +97,162 @@
     
     <meta name="apple-mobile-web-app-capable" content="yes">
     
-    <!---LINK TRAVERSAL-->
-    <script>
-    AFRAME.registerComponent('link-url', {
-          schema: {url: {default: ''},},
 
-          init: function () {
-            var url = this.data.url;
-            this.el.addEventListener('click', function () {
-              window.location.href = url;
-            });
-          }
-        });
-    </script>
+<script>
+  // Define the array of texture images
+  var textures = [
+    "#texture1",
+    "#texture2",
+    "#texture3",
+    "#texture4",
+    "#texture5",
+    "#texture6",
+    "#texture7",
+    "#texture8",
+    "#texture9",
+    "#texture10",
+    "#texture11",
+    "#texture12",
+    "#texture13",
+    "#texture14",
+    "#texture15" 
+  ];
 
-      <script>
-      // Define the array of texture images
-      var textures = [
-        "#texture1",
-        "#texture2",
-        "#texture3",
-        "#texture4",
-        "#texture5",
-        "#texture6",
-        "#texture7",
-        "#texture8",
-        "#texture9",
-        "#texture10",
-        "#texture11",
-        "#texture12",
-        "#texture13",
-        "#texture14",
-        "#texture15" 
-      ];
+  // Define the array of models
+  var models = [
+    "#model1",
+    "#model2",
+    "#model3",
+    "#model4",
+    "#model5",
+    "#model6"
+  ];
+  
+  // Define the array of sky texture images
+  var skies = [
+    "#sky1",
+    "#sky2",
+    "#sky3",
+    "#sky4",
+    "#sky5",
+    "#sky6"
+  ];
 
-      // Define the array of models
-      var models = [
-        "#model1",
-        "#model2",
-        "#model3",
-        "#model4",
-        "#model5",
-        "#model6"
-      ];
     
-      // Define the array of sky texture images
-      var skies = [
-        "#sky1",
-        "#sky2",
-        "#sky3",
-        "#sky4",
-        "#sky5",
-        "#sky6"
-      ];
+function generateRandomCubes() {
+  var numCubes = Math.floor(Math.random() * 11) + 10;
+  var range = 30;
+  var minScale = 0.5;
+  var maxScale = 2;
+  var minDimension = 1;
+  var maxDimension = 8;
+  var sceneEl = document.querySelector("a-scene");
+  var ground = document.querySelector("#ground");
+  var groundPos = ground.object3D.position;
 
-      // Function to randomly select a ground texture from the array
-      function chooseRandomTexture() {
-        var randomIndex = Math.floor(Math.random() * textures.length);
-        return textures[randomIndex];
-      }
+  function getRandomDimension(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
 
-      // Function to randomly select a model from the array
-      function chooseRandomModel() {
-        var randomIndex = Math.floor(Math.random() * models.length);
-        return models[randomIndex];
-      }
-        
-     // Function to randomly select a sky texture from the array
-      function chooseRandomSky() {
-        var randomIndex = Math.floor(Math.random() * skies.length);
-        return skies[randomIndex];
-      }
+  // Remove old cubes
+  var oldCubes = document.querySelectorAll("a-box");
+  oldCubes.forEach(function(cube) {
+    sceneEl.removeChild(cube);
+  });
 
+  // Generate new cubes
+  for (var i = 0; i < numCubes; i++) {
+    var cube = document.createElement("a-box");
+    cube.setAttribute("material", "src: " + chooseRandomTexture());
+    var pos = getRandomPosition(range);
+    if (pos[1] < groundPos.y + 0.5) { // Prevent spawning below ground
+      pos[1] = groundPos.y + 0.5;
+    }
+    cube.setAttribute("position", pos.join(" "));
+    cube.setAttribute("scale", getRandomScale(minScale, maxScale).join(" "));
+    cube.setAttribute("width", getRandomDimension(minDimension, maxDimension));
+    cube.setAttribute("height", getRandomDimension(minDimension, maxDimension));
+    cube.setAttribute("depth", getRandomDimension(minDimension, maxDimension));
+    sceneEl.appendChild(cube);
+  }
+}
+    
+    
+    
+  // Function to randomly select a ground texture from the array
+  function chooseRandomTexture() {
+    var randomIndex = Math.floor(Math.random() * textures.length);
+    return textures[randomIndex];
+  }
 
-      // Function to set a random texture and model to the ground object
-      function setRandomModel() {
-        var objModel = document.querySelector("#ground");
-        objModel.setAttribute("src", chooseRandomModel());
-        objModel.setAttribute("material", "src: " + chooseRandomTexture() + "; repeat: 6 6; side: double");
-      }
-     // Function to randomly set the sky texture
-      function setRandomSky() {
-        var sky = document.querySelector("a-sky");
-        sky.setAttribute("material", "src: " + chooseRandomSky() + "; repeat: 1 1");
-      }
+  // Function to randomly select a model from the array
+  function chooseRandomModel() {
+    var randomIndex = Math.floor(Math.random() * models.length);
+    return models[randomIndex];
+  }
 
-      // On page load, set the sky to a random texture
-      window.onload = setRandomSky;
+  // Function to randomly select a sky texture from the array
+  function chooseRandomSky() {
+    var randomIndex = Math.floor(Math.random() * skies.length);
+    return skies[randomIndex];
+  }
 
-       // Function to generate a random number between min and max
-      function getRandomNumber(min, max) {
-        return Math.random() * (max - min) + min;
-      }
+  // Function to set a random texture and model to the ground object
+  function setRandomModel() {
+    var objModel = document.querySelector("#ground");
+    objModel.setAttribute("src", chooseRandomModel());
+    objModel.setAttribute("material", "src: " + chooseRandomTexture() + "; repeat: 6 6; side: double");
+  }
 
-      // Function to generate a random position within the given range
-      function getRandomPosition(range) {
-        return [
-          getRandomNumber(-range, range),
-          getRandomNumber(-range, range),
-          getRandomNumber(-range, range)
-        ];
-      }
+  // Function to randomly set the sky texture
+  function setRandomSky() {
+    var sky = document.querySelector("a-sky");
+    sky.setAttribute("material", "src: " + chooseRandomSky() + "; repeat: 1 1");
+  }
 
-      // Function to generate a random scale within the given range
-      function getRandomScale(min, max) {
-        var scale = getRandomNumber(min, max);
-        return [scale, scale, scale];
-      }
+  // Function to generate a random number between min and max
+  function getRandomNumber(min, max) {
+    return Math.random() * (max - min) + min;
+  }
+
+  // Function to generate a random position within the given range
+  function getRandomPosition(range) {
+    return [
+      getRandomNumber(-range, range),
+      getRandomNumber(-range, range),
+      getRandomNumber(-range, range)
+    ];
+  }
+
+  // Function to generate a random scale within the given range
+  function getRandomScale(min, max) {
+    var scale = getRandomNumber(min, max);
+    return [scale, scale, scale];
+  }
+    
+
+  // Function to reroll everything
+  function reroll() {
+    setRandomModel();
+    setRandomSky();
+    setFog();
+    generateRandomCubes();
       
-      </script>
+  }
+
+  // On page load, set the sky to a random texture
+  window.onload = setRandomSky;
+    
+
+  // Add click event listener to the button
+  document.querySelector("#reroll-button").addEventListener("click", function() {
+    reroll();
+  });
+</script>
+
   </head>
-  <body >
-      
+  <body>
+
       <script>
 // create the splash screen element
 const splashScreen = document.createElement('div');
@@ -379,47 +423,15 @@ splashScreen.addEventListener('click', () => {
   setFog();
 </script>
 
-
-
-        
-        
-
       <script>
         // Set a random texture and model on load
         setRandomModel();
       </script>
         
-<!-- Generate random cubes -->
-<script>
-  var numCubes = Math.floor(Math.random() * 11) + 10;
-  var range = 30;
-  var minScale = 0.5;
-  var maxScale = 2;
-  var minDimension = 1;
-  var maxDimension = 8;
-  var sceneEl = document.querySelector("a-scene");
-  var ground = document.querySelector("#ground");
-  var groundPos = ground.object3D.position;
-
-  function getRandomDimension(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  }
-  
-  for (var i = 0; i < numCubes; i++) {
-    var cube = document.createElement("a-box");
-    cube.setAttribute("material", "src: " + chooseRandomTexture());
-    var pos = getRandomPosition(range);
-    if (pos[1] < groundPos.y + 0.5) { // Prevent spawning below ground
-      pos[1] = groundPos.y + 0.5;
-    }
-    cube.setAttribute("position", pos.join(" "));
-    cube.setAttribute("scale", getRandomScale(minScale, maxScale).join(" "));
-    cube.setAttribute("width", getRandomDimension(minDimension, maxDimension));
-    cube.setAttribute("height", getRandomDimension(minDimension, maxDimension));
-    cube.setAttribute("depth", getRandomDimension(minDimension, maxDimension));
-    sceneEl.appendChild(cube);
-  }
-</script>
+        <!-- Generate random cubes -->
+        <script>
+    generateRandomCubes();
+        </script>
  
             <!--LINKS-->
 	<a-text href="hallway.html" 
@@ -446,11 +458,15 @@ splashScreen.addEventListener('click', () => {
 	  
 	   <!-- Button to refresh the page -->
  <div>
-  <button onclick="location.reload()"
-          id="refresh-btn">Regenerate Experience</button>
+  <button id="reroll" onclick="reroll()">Regenerate Experience</button>
 </div>
+      
+      
+
+      
+      
 <style>
-  #refresh-btn {
+  #reroll {
     position: absolute;
     top: 20px;
     left: 50%;
@@ -464,7 +480,7 @@ splashScreen.addEventListener('click', () => {
     cursor: pointer;
   }
 
-  #refresh-btn:hover {
+  #reroll:hover {
     background-color: #555;
   }
 </style>
