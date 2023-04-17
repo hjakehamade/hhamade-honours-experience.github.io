@@ -200,7 +200,7 @@ splashScreen.addEventListener('click', () => {
       <a-assets>
         <a-asset-item
           id="gallery"
-          src="artlabhallway2.gltf"
+          src="hallway.gltf"
         ></a-asset-item> 
         <a-asset-item
           id="gallerygeometry"
@@ -482,10 +482,15 @@ splashScreen.addEventListener('click', () => {
                            autoplay: true">
               <a-entity gltf-model="#heart"
                 shadow="cast: true; receive: true"
-
-
                 rotation="90 0 180"
                 > </a-entity>
+              <a-entity light="type: point;
+                color: red;
+                intensity: 3;
+                distance: 9; 
+                decay: 2;"                      
+          >
+            </a-entity>
           </a-entity>
         </a-entity>
         
@@ -696,7 +701,7 @@ splashScreen.addEventListener('click', () => {
       
       
     <!--LINKS-->
- 	<a-text href="room470.html" 
+ 	<a-text href="Room470.html" 
         position="10.8 0.81 0.5" 
         rotation="0 -90 0" 
         color="blue"  
@@ -765,22 +770,102 @@ splashScreen.addEventListener('click', () => {
 
         
         
-      <script src="clickable.js"></script>
+        <script>
+  var canClick = true; // Set initial click state to true
+  var cooldownTime = 300; // Set cooldown time in milliseconds
+  var isMouseDown = false; // Set initial mouse state to false
+  var mouseUpEvent = new Event('mouseup'); // Create mouseup event
+
+  document.querySelectorAll('.clickable').forEach(function(el) {
+    el.addEventListener('mousedown', function () {
+      isMouseDown = true; // Set mouse state to true when clicked down
+    });
+
+    el.addEventListener('mouseup', function (event) {
+      if (isMouseDown && canClick) {
+        var intersection = event.detail.intersection;
+        var distance = intersection.distance;
+        // Minimize accidental clicks by checking if the click was within a reasonable distance from the camera
+        if (distance < 10) {
+          var newPosition = intersection.point;
+          newPosition.y = 1.6; // Adjust the camera height to your liking
+          document.querySelector('a-camera').setAttribute('animation', 'property: position; to: ' + newPosition.x + ' ' + newPosition.y + ' ' + newPosition.z + '; dur: 500');
+
+          canClick = false; // Set click state to false
+          setTimeout(function () {
+            canClick = true; // Reset click state to true after cooldown
+          }, cooldownTime);
+        }
+      }
+      isMouseDown = false; // Reset mouse state to false on click up
+    });
+
+    el.addEventListener('mouseleave', function () {
+      if (isMouseDown) {
+        el.dispatchEvent(mouseUpEvent); // Trigger mouseup event if mouse leaves clickable area while still clicked down
+      }
+      isMouseDown = false; // Reset mouse state to false on mouse leave
+    });
+  });
+  
+  document.querySelectorAll('a-text').forEach(function(el) {
+    el.addEventListener('click', function () {
+      var href = this.getAttribute('href');
+      if (href && href !== 'null') {
+        window.location.href = href;
+        canClick = false; // Set click state to false
+        setTimeout(function () {
+          canClick = true; // Reset click state to true after cooldown
+        }, cooldownTime);
+      }
+    });
+  });
+</script>
 
          
         
         <!-- Ambient Light -->
+        
         <a-entity light="type: ambient;
-                         color: #BBB
-                         intensity: 0.1">
+                         color: #BBB;
+                         intensity: 0.5">
         </a-entity>
         
-         <a-entity light="type: point;
-                         color: #BBB;
-                         intensity: 0.15;"
-                  position="0 3 0"
-                  rotation="0 90 0">
-        </a-entity>
+        <a-entity light="type: point;
+                color: white;
+                intensity: 1;
+                distance: 8; 
+                decay: 2;"
+          position="1 2.5 0">
+</a-entity>
+        
+                <a-entity light="type: point;
+                color: white;
+                intensity: 1;
+                distance: 8; 
+                decay: 2;"
+          position="-7 2.5 0">
+</a-entity>       
+                <a-entity light="type: point;
+                color: white;
+                intensity: 1;
+                distance: 8; 
+                decay: 2;"
+          position="-15 2.5 0">
+</a-entity>
+
+                <a-entity light="type: point;
+                color: white;
+                intensity: 1;
+                distance: 8; 
+                decay: 2;"
+          position="-23 2.5 0">
+</a-entity>
+
+        
+        
+        
+
 
     </a-scene>          
   </body>
