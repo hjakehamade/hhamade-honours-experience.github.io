@@ -14,10 +14,10 @@
       <a-camera></a-camera>
       <a-plane color="black"></a-plane>
 
-      <a-entity id="plant" material="src: #wilted-plant"></a-entity>
+      <a-image id="plant" src="#wilted-plant"></a-image>
       
       <script>
-        const apiUrl = 'https://api.github.com/repos/hjakehamade/hhamade-honours-experience.github.io/contents/.github/workflows/data.json';
+        const apiUrl = 'https://api.github.com/repos/hjakehamade/hhamade-honours-experience.github.io/main/.github/workflows/data.json';
 
         function fetchState() {
           fetch(apiUrl)
@@ -25,7 +25,7 @@
             .then(data => {
               const currentState = data.plant_state.health;
               if (currentState) {
-                document.querySelector('#plant').setAttribute('material', 'src: #healthy-plant');
+                document.querySelector('#plant').setAttribute('src', '#healthy-plant');
                 setTimeout(() => {
                   updateState(false);
                 }, 10000); // 10 seconds
@@ -57,8 +57,7 @@
                     time_updated: new Date().toISOString()
                   }
                 })),
-                sha: data.sha,
-                branch: 'main'
+                sha: data.sha
               })
             });
           });
@@ -69,4 +68,3 @@
     </a-scene>          
   </body>
 </html>
-
