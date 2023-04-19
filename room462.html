@@ -3,7 +3,6 @@
   <head>
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
   </head>
-    
   <body>
     <a-scene>
       <a-assets>      
@@ -17,12 +16,8 @@
       <a-image id="plant" src="#wilted-plant"></a-image>
       
       <script>
-        const apiUrl = 'https://api.github.com/repos/hjakehamade/hhamade-honours-experience.github.io/main/.github/workflows/data.json';
-
-        document.querySelector('#plant').addEventListener('click', () => {
-          updateState(true);
-        });
-
+        const apiUrl = 'https://api.github.com/repos/hjakehamade/hhamade-honours-experience.github.io/contents/.github/workflows/data.json';
+        
         function fetchState() {
           fetch(apiUrl)
             .then(response => response.json())
@@ -34,6 +29,9 @@
                   updateState(false);
                 }, 10000); // 10 seconds
               }
+            })
+            .catch(error => {
+              console.error('Error fetching plant state:', error);
             });
         }
 
@@ -64,8 +62,16 @@
                 sha: data.sha
               })
             });
+          })
+          .catch(error => {
+            console.error('Error updating plant state:', error);
           });
         }
+
+        document.querySelector('#plant').addEventListener('click', () => {
+          updateState(true);
+          document.querySelector('#plant').setAttribute('src', '#healthy-plant');
+        });
 
         fetchState();
       </script>
