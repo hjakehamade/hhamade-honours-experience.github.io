@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <!--    Place the script for aframe here     -->
+    <script src="aframe.min.js"></script>
+    </head>
+    
+    <body>
+    <a-scene>
+      <a-assets>      
+    <img id="wilted-plant" src="wilted-plant.png">
+    <img id="healthy-plant" src="healthy-plant.png">
+      </a-assets>
+    
+    <a-camera></a-camera>
+    <a-plane color="black"></a-plane>
+
+    <a-entity id="plant" material="src: #wilted-plant"></a-entity>
+        
+    <script>
+        const fs = require('fs');
+
+const data = {
+  state: 'healthy',
+  timestamp: new Date().toISOString()
+};
+
+fs.appendFileSync('data.json', JSON.stringify(data) + '\n');
+    </script>
+        
+        <script>
+        const apiUrl = 'https://hjakehamade.github.io/hhamade-honours-experience.github.io/.github/workflows/data.json';
+
+function fetchState() {
+  fetch(apiUrl)
+    .then(response => response.json())
+    .then(data => {
+      const currentState = data.state;
+      if (currentState === 'healthy') {
+        document.querySelector('#plant').setAttribute('material', 'src: #healthy-plant');
+        setTimeout(() => {
+          updateState('wilted');
+        }, 10000); // 10 seconds
+      }
+    });
+}
+
+function updateState(newState) {
+  const data = {
+    state: newState,
+    timestamp: new Date().toISOString()
+  };
+  fetch(apiUrl, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `token ${githubToken}`
+    },
+    body: JSON.stringify({
+      message: 'Update plant state',
+      content: btoa(JSON.stringify(data)),
+      sha: file.sha
+    })
+  });
+}
+
+fetchState();
+
+        </script>
+
+    </a-scene>          
+  </body>
+</html>
