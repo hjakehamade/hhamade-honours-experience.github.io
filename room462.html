@@ -12,11 +12,16 @@
       </a-assets>
     
       <a-camera></a-camera>
+      <a-plane color="black"></a-plane>
 
       <a-image id="plant" src="#wilted-plant"></a-image>
       
       <script>
         const apiUrl = 'https://api.github.com/repos/hjakehamade/hhamade-honours-experience.github.io/main/.github/workflows/data.json';
+
+        document.querySelector('#plant').addEventListener('click', () => {
+          updateState(true);
+        });
 
         function fetchState() {
           fetch(apiUrl)
