@@ -1,0 +1,16 @@
+name: Log Data
+
+on:
+  schedule:
+    - cron: '0 */6 * * *'
+
+jobs:
+  log-data:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    - name: Log data
+      run: node log-data.js
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
