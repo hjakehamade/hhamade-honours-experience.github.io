@@ -11,6 +11,6 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
     - name: Log data
-      run: node log.js
+      run: node log-data.js
       env:
         GITHUB_TOKEN: ${{ secrets.ROOM462_KEY }}
