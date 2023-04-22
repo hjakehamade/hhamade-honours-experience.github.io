@@ -18,6 +18,7 @@
     <script src="animatepng.js"></script>
       <script src="animatepng2.js"></script>
       <script src="animatepng3.js"></script>
+      <script src="animatepng4.js"></script>
 
 <!-- SPEECH SYNTHESIS -->
      <script>
@@ -261,7 +262,7 @@ splashScreen.addEventListener('click', () => {
                animation="property: 
                           position; 
                           startEvents: go">
-  <a-camera look-controls wasd-controls-enabled="false">
+  <a-camera look-controls wasd-controls-enabled="true">
     <a-entity cursor="rayOrigin: mouse" 
               ></a-entity>
   </a-camera>
@@ -285,6 +286,7 @@ splashScreen.addEventListener('click', () => {
               shadow="cast: false; receive: false" 
               position="-6.62366 0 0.09466" 
               rotation="0 180 0"
+              material="roughness: 1"
               >
         </a-entity>
     
@@ -555,72 +557,57 @@ splashScreen.addEventListener('click', () => {
         
         <!---Text typing-->
         
-<a-entity>
-  <script id="text-typing2" type="text/javascript">
-    AFRAME.registerComponent("text-typing", {
-      init: function () {
-        var textEl = this.el;
-        var text = textEl.getAttribute("value");
-        textEl.setAttribute("value", "");
-        var index = 0;
-        var interval;
-        var restartDelay = textEl.getAttribute("restart-delay") || 0;
 
-        function typeText() {
-          interval = setInterval(function () {
-            if (index < text.length) {
-              textEl.setAttribute(
-                "value",
-                textEl.getAttribute("value") + text.charAt(index)
-              );
-              index++;
-            } else {
-              clearInterval(interval);
-              setTimeout(function () {
-                index = 0;
-                textEl.setAttribute("value", "");
-                typeText();
-              }, restartDelay);
-            }
-          }, 100);
-        }
+        <a-entity>
+        <script id="text-typing" type="text/javascript">
+          AFRAME.registerComponent("text-typing", {
+            init: function () {
+              var textEl = this.el;
+              var text = textEl.getAttribute("value");
+              textEl.setAttribute("value", "");
+              var index = 0;
+              var interval;
+              var restartDelay = textEl.getAttribute("restart-delay") || 0;
 
-        typeText();
-      },
-    });
-  </script>
-  <a-text
-    id="your-text-id2"
-    scale="1 1 1"
-    position="-2 1.5 -2.3"
-    rotation="0 -9 0"
-    anchor="center"
-    align="center"
-    value="bygones are bygones . . .
-           what i thought was a totem
-           turns out to be a hellfire . . ."
-    text-typing="restart-delay: 5000"
-    font="mozillavr"
-    color="#474747"
-    width="4"
-    visible="true"
-	onclick="speak('bygones are bygones, What I thought was a totem turns out to be a hellfire.')"
-  ></a-text>
-</a-entity>
-<a-plane
-                position="-2 1.5 -2.3"
-                rotation="0 -9 0"
-                scale="0.5 0.5"
-                geometry="primitive: plane; width: 8.6; height: 2.6;"
-                align="left"
-                anchor="center"
-                material="opacity: 0.0;
-                          transparent: true;"
-		 onclick="speak('bygones are bygones, What I thought was a totem turns out to be a hellfire.')">
-</a-plane>
+              function typeText() {
+                interval = setInterval(function () {
+                  if (index < text.length) {
+                    textEl.setAttribute(
+                      "value",
+                      textEl.getAttribute("value") + text.charAt(index)
+                    );
+                    index++;
+                  } else {
+                    clearInterval(interval);
+                    setTimeout(function () {
+                      index = 0;
+                      textEl.setAttribute("value", "");
+                      typeText();
+                    }, restartDelay);
+                  }
+                }, 100);
+              }
 
+              typeText();
+            },
+          });
+        </script>
+        
+          <a-image        
+                position="-2 1.2 -2.4"
+                rotation="0 -9 -5"
+                scale="4 2.5 2"
+               animate-png4
+                onclick="speak('nothing lives forever, save your work before its all gone.')"
+                   >
+                   </a-image>
+      </a-entity>
+        
 
-
+        
+        
+        
+        
        
         <a-entity>
         <script id="text-typing" type="text/javascript">
@@ -683,10 +670,9 @@ splashScreen.addEventListener('click', () => {
 		 onclick="speak('my aching heart beats for times past as if I were there, and maybe one day my rose tinted glasses will shatter.')">
         </a-plane>
         
-        
+          
   
        <a-sky
-               src="bsod.png"
                animate-png2></a-sky>
     <a-plane 
                position="3.4 1.35 -2.8"
@@ -699,9 +685,18 @@ splashScreen.addEventListener('click', () => {
       </a-plane>
       
       
+        
+
+        <a-image position="-24.482 1.80132 1.7" 
+                 rotation="0 180 0" 
+                 src="flower-healthy.png" 
+                 scale="0.42 0.61 1">
+        
+        </a-image>
+        
       
     <!--LINKS-->
- 	<a-text href="room470.html" 
+ 	<a-text href="Room470.html" 
         position="10.8 0.81 0.5" 
         rotation="0 -90 0" 
         color="blue"  
@@ -830,42 +825,58 @@ splashScreen.addEventListener('click', () => {
                          color: #BBB;
                          intensity: 0.5">
         </a-entity>
+        <a-entity light="type: point;
+                color: white;
+                intensity: 0.5;
+                distance: 20; 
+                decay: 2;"
+          position="7 3.5 0.2">
+</a-entity>
+        
         
         <a-entity light="type: point;
                 color: white;
-                intensity: 1;
-                distance: 8; 
+                intensity: 0.5;
+                distance: 20; 
                 decay: 2;"
-          position="1 2.5 0">
+          position="1 3.5 0.2">
 </a-entity>
         
                 <a-entity light="type: point;
                 color: white;
-                intensity: 1;
-                distance: 8; 
+                intensity: 0.2;
+                distance: 20; 
                 decay: 2;"
-          position="-7 2.5 0">
+          position="-7 3.5 0.6">
 </a-entity>       
                 <a-entity light="type: point;
                 color: white;
-                intensity: 1;
-                distance: 8; 
+                intensity: 0.5;
+                distance: 20; 
                 decay: 2;"
-          position="-15 2.5 0">
+          position="-15 3.5 0.2">
 </a-entity>
 
                 <a-entity light="type: point;
                 color: white;
-                intensity: 1;
-                distance: 8; 
+                intensity: 0.5;
+                distance: 5; 
                 decay: 2;"
-          position="-23 2.5 0">
+          position="-23 3 0.6">
+</a-entity>
+        
+        <a-entity light="type: point;
+                color: white;
+                intensity: 0.3;
+                distance: 5; 
+                decay: 2;"
+          position="-28 3 0.6">
 </a-entity>
 
         
         
         
-
+    
 
     </a-scene>          
   </body>
