@@ -1,80 +1,318 @@
-<!DOCTYPE html>
 <html>
   <head>
-    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+      <!--    Place the script for aframe here     -->
+    <script src="aframe.min.js"></script>
+    <!-- Link Clicking -->
+    <script src="aframe-href-component.min.js"></script>
+    <!--     Place the script for aframe extras here -->
+    <script src="aframe-extras.js"></script>
+    <!--     Place the script for the environment component here -->
+    <script src="aframe-environment-component.min.js"></script>
+    <!--    Event Waypoint Script -->
+    <script src="aframe-particle-system-component.min.js"></script>  
+    <script src="aframe-event-set-component.min.js"></script>
+
+    <!-- ANIMATE PNG-->
+    <script src="animatepng2.js"></script>
   </head>
   <body>
-    <a-scene>
-      <a-assets>      
-        <img id="wilted-plant" src="wilted-plant.png">
-        <img id="healthy-plant" src="healthy-plant.png">
-      </a-assets>
-    
-      <a-camera></a-camera>
-      <a-plane color="black"></a-plane>
-
-      <a-image id="plant" src="#wilted-plant"></a-image>
       
-      <script>
-        const apiUrl = 'https://raw.githubusercontent.com/hjakehamade/hhamade-honours-experience.github.io/main/.github/workflows/data.json';
+            <script>
+// create the splash screen element
+const splashScreen = document.createElement('div');
+splashScreen.style.position = 'fixed';
+splashScreen.style.top = '0';
+splashScreen.style.left = '0';
+splashScreen.style.width = '100%';
+splashScreen.style.height = '100%';
+splashScreen.style.backgroundColor = 'rgba(0,0,0,0.7)';
+splashScreen.style.zIndex = '9999';
+
+// add the instructions to the splash screen
+const instructions = document.createElement('div');
+instructions.style.color = '#fff';
+instructions.style.textAlign = 'center';
+instructions.style.marginTop = '50vh';
+instructions.style.transform = 'translateY(-50%)';
+instructions.style.fontSize = '24px';
+instructions.style.fontWeight = 'bold';
+
+const line1 = document.createElement('p');
+line1.innerText = 'This is an interactive gallery application';
+instructions.appendChild(line1);
+
+const line2 = document.createElement('p');
+line2.innerText = '...';
+instructions.appendChild(line2);
+
+const line3 = document.createElement('p');
+line3.innerText = 'click anywhere to begin';
+instructions.appendChild(line3);
+
+splashScreen.appendChild(instructions);
+
+// add the splash screen to the body
+document.body.appendChild(splashScreen);
+
+// create the audio element
+const audioElement = new Audio('gallerysound4.mp3');
+audioElement.loop = true;
+
+// add an event listener to the splash screen to start the audio and remove the splash screen on click
+splashScreen.addEventListener('click', () => {
+  audioElement.play();
+  splashScreen.remove();
+});
+</script>
+      
+      
+      
+      
+      
+<a-scene>
+    
+<script>
+  const myScene = document.querySelector('a-scene');
+  setFog(myScene, '#ffc066', 2, 15);
+
+  function setFog(scene, color, near, far) {
+    scene.setAttribute('fog', {
+      type: 'linear',
+      color: color,
+      near: near,
+      far: far
+    });
+  }
+
+  function animateFog(scene) {
+    let direction = 1; // 1 = increasing fog density, -1 = decreasing fog density
+    let density = 0.5; // initial fog density
+    const minDensity = 0.1;
+    const maxDensity = 1.0;
+    const step = 0.02;
+
+    setInterval(() => {
+      density += direction * step;
+      if (density > maxDensity) {
+        density = maxDensity;
+        direction = -1;
+      } else if (density < minDensity) {
+        density = minDensity;
+        direction = 1;
+      }
+      setFog(scene, '#fffbd8', density, 15);
+    }, 50);
+  }
+
+  animateFog(myScene);
+</script>
+
+    
+    
+    
+      <a-entity rotation="0 0 0">
+        <a-entity position="0 0 0" rotation="0 0 0" id="pov" animation="property: position; startEvents: go">
+          <a-camera look-controls wasd-controls-enabled="true">
+            <a-entity cursor="rayOrigin: mouse"></a-entity>
+          </a-camera>
+        </a-entity>
+      </a-entity>
         
-        function fetchState() {
-          fetch(apiUrl)
-            .then(response => response.json())
-            .then(data => {
-              const currentState = data.plant_state.health;
-              if (currentState) {
-                document.querySelector('#plant').setAttribute('src', '#healthy-plant');
-                setTimeout(() => {
-                  updateState(false);
-                }, 10000); // 10 seconds
-              }
-            })
-            .catch(error => {
-              console.error('Error fetching plant state:', error);
-            });
-        }
+<a-image data-model="plant" position="4 0.8 -2" rotation="0 45 0" scale="1 1.5 1" material="src: flower-healthy.png; alphaTest: 0.01;"></a-image>
+<a-image data-model="plant2" position="1 0.8 -4" rotation="0 -45 0" scale="1 1.5 1" material="src: flower-healthy2.png; alphaTest: 0.01;"></a-image>
+<a-image data-model="plant3" position="4 0.8 -6" rotation="0 90 0" scale="1 1.5 1" material="src: flower-wilting.png; alphaTest: 0.01;"></a-image>
+<a-image data-model="plant4" position="6 1 -5" rotation="0 135 0" scale="1.5 2 1.5" material="src: flower-wilting2.png; alphaTest: 0.01;"></a-image>
+<a-image data-model="plant5" position="2 1.2 -6" rotation="0 -45 0" scale="1.8 2.3 1.8" material="src: flower-healthy2.png; alphaTest: 0.01;"></a-image>
+<a-image data-model="plant6" position="9 0.8 -6" rotation="0 90 0" scale="1 1.5 1" material="src: flower-wilting.png; alphaTest: 0.01;"></a-image>
+<a-image data-model="plant7" position="9 0.8 -3" rotation="0 135 0" scale="1 1.5 1" material="src: flower-wilting2.png; alphaTest: 0.01;"></a-image>
+<a-image data-model="plant2" position="8.8 1.2 -0.2" rotation="0 -45 0" scale="1.8 2.3 1.8" material="src: flower-healthy2.png; alphaTest: 0.01;"></a-image>
 
-        function updateState(newState) {
-          const githubToken = '${{ secrets.ROOM462_KEY }}';
-          fetch(apiUrl, {
-            method: 'GET',
-            headers: {
-              'Authorization': `token ${githubToken}`
-            }
-          })
-          .then(response => response.json())
-          .then(data => {
-            fetch(apiUrl, {
-              method: 'PUT',
-              headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `token ${githubToken}`
-              },
-              body: JSON.stringify({
-                message: 'Update plant state',
-                content: btoa(JSON.stringify({
-                  plant_state: {
-                    health: newState,
-                    time_updated: new Date().toISOString()
-                  }
-                })),
-                sha: data.sha
-              })
-            });
-          })
-          .catch(error => {
-            console.error('Error updating plant state:', error);
-          });
-        }
+        
+        
+        
+<a-entity gltf-model="room462.gltf" 
+          position="0 0 -2"
+        shadow="cast: true; 
+                receive: true"
+        material="roughness: 1"
+          ></a-entity> 
+    
+    
+    <a-sky color="#fffbd8"></a-sky>
 
-        document.querySelector('#plant').addEventListener('click', () => {
-          updateState(true);
-          document.querySelector('#plant').setAttribute('src', '#healthy-plant');
-        });
 
-        fetchState();
-      </script>
-    </a-scene>          
+        
+        
+    <a-plane scale="10.58 8.12 10" 
+             material="trasparent: true;                    
+                       opacity: 0.0;" 
+             rotation="-90 0 0" 
+             position="4.59122 0.1 -3.7826"
+             class="clickable"></a-plane>
+        
+        
+   <a-plane scale="11.51 8.86 10" 
+            material="src: grasstexture.png; repeat: 5 5; roughness: 1" 
+            rotation="-90 0 0" 
+            position="4.59122 -0.00808 -3.7826" 
+            shadow="cast: true; 
+                receive: true" ></a-plane>
+    
+    
+
+    
+
+<a-entity light="type: ambient;
+                         color: grey;
+                         intensity: 0.2">
+    </a-entity>
+    
+    <a-plane light="type: point; color: #ffc066; 
+                    intensity: 8; 
+                    distance: 7.23; 
+                    decay: 1.43; 
+                    angle: 60.49" 
+             material="shader: flat; color: #fffbd8" 
+             height="0.44" 
+             width="0.44" 
+             position="4.288 2.45227 -8.63624" 
+             geometry="height: 1" 
+             scale="30 8 1">
+</a-plane>
+    
+    
+<a-entity position="10.43413 9.69024 1.70136" light="type: point; intensity: 1; castShadow: true; shadowBias: -0.0001;" ></a-entity>
+
+<script>
+AFRAME.registerComponent('billboard', {
+  tick: function () {
+    // Get the camera position
+    var camera = document.querySelector('a-camera');
+    var cameraPosition = camera.getAttribute('position');
+
+    // Get the current position and rotation of the entity
+    var entityPosition = this.el.getAttribute('position');
+    var entityRotation = this.el.getAttribute('rotation');
+
+    // Calculate the rotation that the entity should have to face the camera
+    var targetRotation = Math.atan2(cameraPosition.x - entityPosition.x, cameraPosition.z - entityPosition.z) * 180 / Math.PI;
+
+    // Set the rotation of the entity to face the camera
+    this.el.setAttribute('rotation', { x: entityRotation.x, y: targetRotation, z: entityRotation.z });
+  }
+});
+
+// Apply the billboard component to each plant entity
+var plants = document.querySelectorAll('[data-model^="plant"]');
+plants.forEach(function(plant) {
+  plant.setAttribute('billboard', '');
+});
+      
+// Apply the billboard component to each grass entity
+var grass = document.querySelectorAll('[data-model^="grass"]');
+grass.forEach(function(grass) {
+  grass.setAttribute('billboard', '');
+});    
+
+      
+</script>
+
+
+<script>
+function startPlantAnimation(aEntity) {
+  const models = ["flower-healthy.png", "flower-healthy2.png", "flower-wilting.png", "flower-wilting2.png", "flower-wilted.png"];
+  let currentModelIndex = 0;
+  let timeoutId;
+
+  function setModel(index) {
+    console.log(`Setting model for ${aEntity.getAttribute("data-model")} to`, models[index]);
+    aEntity.setAttribute("src", models[index]);
+    currentModelIndex = index;
+  }
+
+  setModel(currentModelIndex);
+
+  function nextModel() {
+    if (currentModelIndex < models.length - 1) {
+      setModel(currentModelIndex + 1);
+    } else {
+      setModel(currentModelIndex);
+      aEntity.removeEventListener("click", restartPlantAnimation);
+    }
+  }
+
+  function restartPlantAnimation() {
+    if (currentModelIndex > 0) {
+      clearTimeout(timeoutId);
+      setModel(0);
+    }
+    setTimeout(() => {
+      setModel(1);
+      const randomDuration = Math.floor(Math.random() * 3000) + 2000; // random duration between 2 and 5 seconds
+      timeoutId = setTimeout(() => {
+        setModel(2);
+        setTimeout(() => {
+          setModel(3);
+          const randomDuration = Math.floor(Math.random() * 3000) + 2000; // random duration between 2 and 5 seconds
+          timeoutId = setTimeout(() => {
+            setModel(4);
+            aEntity.addEventListener("click", restartPlantAnimation);
+          }, randomDuration);
+        }, 500);
+      }, randomDuration);
+    }, 500);
+  }
+
+  const randomDuration = Math.floor(Math.random() * 3000) + 2000; // random duration between 2 and 5 seconds
+  setTimeout(() => {
+    setModel(1);
+    timeoutId = setTimeout(() => {
+      setModel(2);
+      setTimeout(() => {
+        setModel(3);
+        const randomDuration = Math.floor(Math.random() * 3000) + 2000; // random duration between 2 and 5 seconds
+        timeoutId = setTimeout(() => {
+          setModel(4);
+          aEntity.addEventListener("click", restartPlantAnimation);
+        }, randomDuration);
+      }, 500);
+    }, randomDuration);
+  }, 500);
+
+  aEntity.addEventListener("click", restartPlantAnimation);
+}
+
+const plantEntities = document.querySelectorAll('a-image[data-model^="plant"]');
+plantEntities.forEach((entity) => {
+  startPlantAnimation(entity);
+});
+
+</script>
+
+
+            <!--LINKS-->
+	<a-text href="hallway.html" 
+        position="0 0.81 0.5" 
+        rotation="0 180 0" 
+        color="blue"  
+        scale=".5 .5 .5" 
+        value="Click to Exit Room 462"
+        geometry="primitive: plane; width: 2.3; height: 0.5;"
+        material="color: #b7beff;"
+        align=  "center"
+        event-set__down="_event: mousedown; color: #ADD8E6"
+            ></a-text>
+    </a-scene>
+    
+<script src="clickable.js"></script>
+
+
   </body>
 </html>
+
+
+
+
+
+
+
