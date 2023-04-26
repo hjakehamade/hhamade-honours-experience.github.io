@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <!--    Place the script for aframe here     -->
+    <script src="aframe.min.js"></script>
+    <!-- Link Clicking -->
+    <script src="aframe-href-component.min.js"></script>
+    <!--     Place the script for aframe extras here -->
+    <script src="aframe-extras.js"></script>
+    <!--     Place the script for the environment component here -->
+    <script src="aframe-environment-component.min.js"></script>
+    <!--    Event Waypoint Script -->
+    <script src="aframe-particle-system-component.min.js"></script>  
+    <script src="aframe-event-set-component.min.js"></script>
+
+    <!-- ANIMATE PNG-->
+    <script src="animatepng.js"></script>
+      <script src="animatepng2.js"></script>
+      <script src="animatepng3.js"></script>
+      <script src="animatepng4.js"></script>
+
+<!-- SPEECH SYNTHESIS -->
+     <script>
+function speak(text) {
+  var synth = window.speechSynthesis;
+  var chunks = text.match(/[^\.!\?]+[\.!\?]+/g); // split the text into full sentences
+  var currentChunk = 0;
+  
+  if (!synth.speaking) { // check if the speech has ended before starting a new one
+    var utterance = new SpeechSynthesisUtterance(chunks[currentChunk]);
+
+    utterance.onend = function() {
+      currentChunk++;
+      if (currentChunk < chunks.length) {
+        utterance.text = chunks[currentChunk];
+        synth.speak(utterance);
+      }
+    };
+
+    synth.speak(utterance);
+  }
+}
+</script>	  
+    
+    <!---VERTICAL PITCH touch controls--->
+    <script>
+    
+    AFRAME.components["look-controls"].Component.prototype.onTouchMove = function (t) {
+                        var PI_2 = Math.PI/2,
+                        e,
+                        o = this.el.sceneEl.canvas,
+                        i = this.yawObject,
+                        j = this.pitchObject;
+                        this.touchStarted && this.data.touchEnabled && (e = 2 * Math.PI * (t.touches[0].pageX - this.touchStart.x) / o.clientWidth, f = 2 * Math.PI * (t.touches[0].pageY - this.touchStart.y) / o.clientHeight, j.rotation.x += .3 * f, i.rotation.y += .5 * e, j.rotation.x = Math.max(-PI_2, Math.min(PI_2, j.rotation.x)), this.touchStart = {
+                                x: t.touches[0].pageX,
+                                y: t.touches[0].pageY
+                            })
+                        }
+
+    
+    </script>
+    
+    
+    <!--IOS VIDEO COMPATABILITY-->
+    <script>
+        AFRAME.registerComponent('play-on-click', {
+          init: function () {
+            this.onClick = this.onClick.bind(this);
+          },
+          play: function () {
+            window.addEventListener('click', this.onClick);
+          },
+          pause: function () {
+            window.removeEventListener('click', this.onClick);
+          },
+          onClick: function (evt) {
+            var videoEl = this.el.getAttribute('material').src;
+            if (!videoEl) { return; }
+            this.el.object3D.visible = true;
+            videoEl.play();
+          }
+        });
+    </script> 
+    
+    
+    <!--- GOTO SCRIPT --->
+    <script>
+      AFRAME.registerSystem("goto", {
+        init: function() {
+          // global - shared between all goto components
+          this.isMoving = false;
+        }
+      });
+
+      AFRAME.registerComponent("goto", {
+        init: function() {
+          let rig = document.querySelector('#pov')
+          rig.addEventListener('animationcomplete', e=> {
+            this.system.isMoving = false
+          })
+          this.el.addEventListener("click", e => {
+            if (this.system.isMoving) return;
+            let targetPos = this.el.getAttribute("position")
+            let rigPos = rig.getAttribute("position")
+            this.system.isMoving = true
+            
+            
+            rig.setAttribute("animation", {
+              "from": rigPos,
+              "to": AFRAME.utils.coordinates.stringify({x: targetPos.x, y: rigPos.y, z: targetPos.z}),
+              "dur": targetPos.distanceTo(rigPos) * 200
+            })
+            rig.emit('go')
+          });
+        }
+      });
+    </script>
+    
+    
+    
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    
+    <!---LINK TRAVERSAL-->
+    <script>
+    AFRAME.registerComponent('link-url', {
+          schema: {url: {default: ''},},
+
+          init: function () {
+            var url = this.data.url;
+            this.el.addEventListener('click', function () {
+              window.location.href = url;
+            });
+          }
+        });
+    </script>
+
+  </head>
+ 
+  
+  
+   <body>
+       
+       <script>
+// create the splash screen element
+const splashScreen = document.createElement('div');
+splashScreen.style.position = 'fixed';
+splashScreen.style.top = '0';
+splashScreen.style.left = '0';
+splashScreen.style.width = '100%';
+splashScreen.style.height = '100%';
+splashScreen.style.backgroundColor = 'rgba(0,0,0,0.7)';
+splashScreen.style.zIndex = '9999';
+
+// add the instructions to the splash screen
+const instructions = document.createElement('div');
+instructions.style.color = '#fff';
+instructions.style.textAlign = 'center';
+instructions.style.marginTop = '50vh';
+instructions.style.transform = 'translateY(-50%)';
+instructions.style.fontSize = '24px';
+instructions.style.fontWeight = 'bold';
+
+const line1 = document.createElement('p');
+line1.innerText = 'This is an interactive gallery application';
+instructions.appendChild(line1);
+
+const line2 = document.createElement('p');
+line2.innerText = '...';
+instructions.appendChild(line2);
+
+const line3 = document.createElement('p');
+line3.innerText = 'click anywhere to begin';
+instructions.appendChild(line3);
+
+splashScreen.appendChild(instructions);
+
+// add the splash screen to the body
+document.body.appendChild(splashScreen);
+
+// create the audio element
+const audioElement = new Audio('gallerysound.mp3');
+audioElement.loop = true;
+
+// add an event listener to the splash screen to start the audio and remove the splash screen on click
+splashScreen.addEventListener('click', () => {
+  audioElement.play();
+  splashScreen.remove();
+});
+</script>
+       
+       
+       
+       
+       
+    <a-scene
+             >
+      <!-- Asset Management System-->
+
+      <a-assets>
+        <a-asset-item
+          id="gallery"
+          src="overpass.gltf"
+        ></a-asset-item> 
+          
+          <a-image id="brokenimage1" src="brokenimage1.png"></a-image>
+          <a-image id="brokenimage2" src="brokenimage2.png"></a-image>
+          
+      </a-assets>
+    
+      <!--CAMERA-->
+
+<a-entity 
+          rotation="0 0 0">
+     <a-entity position="0 0 0" 
+               rotation="0 0 0" 
+               id="pov" 
+               animation="property: 
+                          position; 
+                          startEvents: go">
+  <a-camera look-controls wasd-controls-enabled="false">
+    <a-entity cursor="rayOrigin: mouse" 
+              ></a-entity>
+  </a-camera>
+</a-entity>
+</a-entity>
+    
+
+        
+        
+        
+        
+<script>
+AFRAME.registerComponent('random-rectangle', {
+  schema: {
+    minWidth: { type: 'number', default: 1 },
+    maxWidth: { type: 'number', default: 3 },
+    minHeight: { type: 'number', default: 1 },
+    maxHeight: { type: 'number', default: 3 },
+    color: { type: 'color', default: '#ffffff' },
+    imageSrc1: { type: 'string', default: '' },
+    imageSrc2: { type: 'string', default: '' },
+  },
+  init: function () {
+    const data = this.data;
+    const el = this.el;
+
+    const width = (data.maxWidth - data.minWidth) * Math.random() + data.minWidth;
+    const height = (data.maxHeight - data.minHeight) * Math.random() + data.minHeight;
+
+    const rectangle = document.createElement('a-plane');
+    rectangle.setAttribute('width', width);
+    rectangle.setAttribute('height', height);
+    rectangle.setAttribute('color', data.color);
+    rectangle.setAttribute('material', 'opacity: 0.6');
+
+    if (data.imageSrc1 !== '' && data.imageSrc2 !== '') {
+      const image = document.createElement('a-image');
+      const randomSrc = Math.random() < 0.5 ? data.imageSrc1 : data.imageSrc2;
+      image.setAttribute('src', randomSrc);
+      image.setAttribute('position', `0 0 0.01`);
+      image.setAttribute('scale', '0.2 0.2 0.2');
+
+      rectangle.appendChild(image);
+    }
+
+    el.appendChild(rectangle);
+  },
+});
+</script>
+<a-entity position="-1.1 1.6 -0.5" 
+          rotation="0 90 0"
+          random-rectangle="minWidth: 0.2; maxWidth: 1; 
+                            minHeight: 0.2; maxHeight: 1;
+                            color: grey; 
+                            imageSrc1: #brokenimage1;
+                            imageSrc2: #brokenimage2;">
+</a-entity>
+
+<a-entity position="-1.1 1.6 -2.5" 
+          rotation="0 90 0"
+          random-rectangle="minWidth: 0.2; maxWidth: 1; 
+                            minHeight: 0.2; maxHeight: 1;
+                            color: grey; 
+                            imageSrc1: #brokenimage1;
+                            imageSrc2: #brokenimage2;">
+</a-entity>
+<a-entity position="-1.1 1.6 -4.5" 
+          rotation="0 90 0"
+          random-rectangle="minWidth: 0.2; maxWidth: 1; 
+                            minHeight: 0.2; maxHeight: 1;
+                            color: grey; 
+                            imageSrc1: #brokenimage1;
+                            imageSrc2: #brokenimage2;">
+</a-entity>
+
+        
+        
+        
+        
+        
+<a-entity position="0 1.6 -6.01" 
+          random-rectangle="minWidth: 0.2; maxWidth: 1; 
+                            minHeight: 0.2; maxHeight: 1;
+                            color: grey; 
+                            imageSrc1: #brokenimage1;
+                            imageSrc2: #brokenimage2;">
+</a-entity>
+    
+
+<a-entity position="2.5 1.6 -6.01" 
+          random-rectangle="minWidth: 2; maxWidth: 2; 
+                            minHeight: 2; maxHeight: 2;
+                            color: grey; 
+                            imageSrc1: #brokenimage1;
+                            imageSrc2: #brokenimage2;">
+</a-entity>
+
+<a-text
+        value="404 File not found"
+        color="black"
+        position="4.34 2.5 -2.6"
+        scale="3 3"
+        rotation="0 -90 0"
+        align="center"></a-text>
+<a-text
+        value="the artwork you are looking for
+               no longer exists"
+        color="#323232"
+        position="4.34 1.6 -2.6"
+        scale="1.5 1.5"
+        rotation="0 -90 0"
+        align="center"></a-text>
+
+        
+        
+
+      <!-- Scene -->
+
+    <a-entity gltf-model="#gallery"  
+              shadow="cast: false; receive: false" 
+              position="0 0 0" 
+              rotation="0 0 0"
+              material="roughness: 1"
+              scale=" 0.9 0.9 0.9"
+              >
+        </a-entity>
+    
+    
+        
+    <a-plane scale="5.4 6.7 0.00001" 
+             material="trasparent: true;                    
+                       opacity: 0.0;" 
+             rotation="-90 0 0" 
+             position="1.6137 0.08 -2.60284"
+             class="clickable"></a-plane>
+
+        
+        <!---Text typing-->
+        
+
+
+        
+   
+        
+
+    <!--LINKS-->
+ 	<a-text href="hallway.html" 
+        position="-0.1 0.81 0.6" 
+        rotation="0 180 0" 
+        color="blue"  
+        scale=".5 .5 .5" 
+        value="Click to Exit"
+        geometry="primitive: plane; width: 1.5; height: 0.5;"
+        material="color: #b7beff;"
+        align=  "center"
+        event-set__down="_event: mousedown; color: #ADD8E6"
+            ></a-text>   
+        
+        
+        <script>
+  var canClick = true; // Set initial click state to true
+  var cooldownTime = 300; // Set cooldown time in milliseconds
+  var isMouseDown = false; // Set initial mouse state to false
+  var mouseUpEvent = new Event('mouseup'); // Create mouseup event
+
+  document.querySelectorAll('.clickable').forEach(function(el) {
+    el.addEventListener('mousedown', function () {
+      isMouseDown = true; // Set mouse state to true when clicked down
+    });
+
+    el.addEventListener('mouseup', function (event) {
+      if (isMouseDown && canClick) {
+        var intersection = event.detail.intersection;
+        var distance = intersection.distance;
+        // Minimize accidental clicks by checking if the click was within a reasonable distance from the camera
+        if (distance < 10) {
+          var newPosition = intersection.point;
+          newPosition.y = 1.6; // Adjust the camera height to your liking
+          document.querySelector('a-camera').setAttribute('animation', 'property: position; to: ' + newPosition.x + ' ' + newPosition.y + ' ' + newPosition.z + '; dur: 500');
+
+          canClick = false; // Set click state to false
+          setTimeout(function () {
+            canClick = true; // Reset click state to true after cooldown
+          }, cooldownTime);
+        }
+      }
+      isMouseDown = false; // Reset mouse state to false on click up
+    });
+
+    el.addEventListener('mouseleave', function () {
+      if (isMouseDown) {
+        el.dispatchEvent(mouseUpEvent); // Trigger mouseup event if mouse leaves clickable area while still clicked down
+      }
+      isMouseDown = false; // Reset mouse state to false on mouse leave
+    });
+  });
+  
+  document.querySelectorAll('a-text').forEach(function(el) {
+    el.addEventListener('click', function () {
+      var href = this.getAttribute('href');
+      if (href && href !== 'null') {
+        window.location.href = href;
+        canClick = false; // Set click state to false
+        setTimeout(function () {
+          canClick = true; // Reset click state to true after cooldown
+        }, cooldownTime);
+      }
+    });
+  });
+</script>
+
+         
+        
+        <!-- Ambient Light -->
+        
+        <a-entity light="type: ambient;
+                         color: #BBB;
+                         intensity: 0.55">
+        </a-entity>
+        <a-entity light="type: point;
+                color: white;
+                intensity: 0.2;
+                distance: 20; 
+                decay: 2;"
+          position="0 2 -2.6">
+</a-entity>
+         <a-entity light="type: point;
+                color: white;
+                intensity: 0.2;
+                distance: 20; 
+                decay: 2;"
+          position="1.6 2 -5.7">
+</a-entity>       
+        
+            <a-entity light="type: point;
+                color: white;
+                intensity: 0.2;
+                distance: 20; 
+                decay: 2;"
+          position="3.5 2 -2.6">
+</a-entity>
+        
+
+        
+        
+        
+    
+
+    </a-scene>          
+  </body>
+</html>
