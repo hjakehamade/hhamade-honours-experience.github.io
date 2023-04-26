@@ -19,7 +19,9 @@
       <script src="animatepng2.js"></script>
       <script src="animatepng3.js"></script>
       <script src="animatepng4.js"></script>
-
+    <script src="animatepng5.js"></script>
+      
+      
 <!-- SPEECH SYNTHESIS -->
      <script>
 function speak(text) {
@@ -302,6 +304,20 @@ splashScreen.addEventListener('click', () => {
           >
         </a-entity>
         
+        
+<a-entity position="12 0.3 1.6"
+          rotation="0 180 0">
+    <a-entity 
+              animation="property:position;
+                         to: 43 0 0;
+                         loop:true;
+                         easing:linear;
+                         dur: 50000">
+            <a-image
+             animate-png5
+                     scale="0.6 0.6 0.6"></a-image>  
+            </a-entity>
+    </a-entity>
         
         <!-----------Grandma--->
         
