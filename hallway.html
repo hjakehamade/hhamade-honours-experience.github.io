@@ -262,7 +262,7 @@ splashScreen.addEventListener('click', () => {
                animation="property: 
                           position; 
                           startEvents: go">
-  <a-camera look-controls wasd-controls-enabled="true">
+  <a-camera look-controls wasd-controls-enabled="false">
     <a-entity cursor="rayOrigin: mouse" 
               ></a-entity>
   </a-camera>
@@ -603,10 +603,29 @@ splashScreen.addEventListener('click', () => {
                    </a-image>
       </a-entity>
         
+        
+    <a-entity>
+    <a-image src="brokenimage1.png" 
+             position="-9.5754 1.6 -3.92924"
+             rotation="0 -9.08 10">
+        
+    </a-image>
+    <a-image src="brokenimage2.png" 
+             position="-9.5754 0.08 -3.3"
+             rotation="-90 -45 0">
+        
+    </a-image>
+        <a-image src="brokenimage1.png" 
+             position="-9 0.09 -3"
+             rotation="-85 45 0"
+                 scale="0.8 0.8 0.8">
+        
+    </a-image>  
+        
+    </a-entity>
 
         
-        
-        
+   
         
        
         <a-entity>
@@ -674,15 +693,47 @@ splashScreen.addEventListener('click', () => {
   
        <a-sky
                animate-png2></a-sky>
-    <a-plane 
-               position="3.4 1.35 -2.8"
-               scale="2.4 2.5 3"
-               rotation="0 40 0"
-               material="repeat: 7 7;
-                         side: double;"
-                animate-png
-               >
-      </a-plane>
+
+
+
+        
+        
+        
+<script>
+AFRAME.registerComponent('random-color', {
+  init: function () {
+    const el = this.el;
+
+    setInterval(() => {
+      const hue = Math.random() * 360;
+      const color = new THREE.Color(`hsl(${hue}, 100%, 50%)`);
+      el.setAttribute('material', 'color', color);
+
+      // Apply the same color animation to the second a-plane
+      const otherEl = document.querySelector('#second-plane');
+      otherEl.setAttribute('material', 'color', color);
+    }, 2000); // change interval time to 1000ms (1 second)
+  }
+});
+
+</script>
+ 
+        
+<a-plane 
+   position="5.207 1.35 -2.712"
+   scale="2.4 2.5 2.5"
+   rotation="0 -46.5 0"
+   material="shader: flat; color: white;"
+   random-color
+></a-plane>
+
+<a-plane 
+    id="second-plane"
+   position="3.4 1.35 -2.8"
+   scale="2.4 2.5 2.5"
+   rotation="0 40 0"
+   material="shader: flat; color: white;"
+></a-plane>
       
       
         
@@ -690,7 +741,7 @@ splashScreen.addEventListener('click', () => {
         <a-image position="-24.482 1.80132 1.7" 
                  rotation="0 180 0" 
                  src="flower-healthy.png" 
-                 scale="0.42 0.61 1">
+                 scale="0.5 0.7 1">
         
         </a-image>
         
@@ -763,6 +814,19 @@ splashScreen.addEventListener('click', () => {
         event-set__down="_event: mousedown; color: #ADD8E6"
             ></a-text>
 
+     <a-text href="overpass.html" 
+        position="5.1 0.81 -2.518" 
+        rotation="0 -42 0" 
+        color="blue"  
+        scale=".5 .5 .5" 
+        value="Click to Enter Overpass"
+        geometry="primitive: plane; width: 2.5; height: 0.5;"
+        material="color: #b7beff;"
+        align=  "center"
+        event-set__down="_event: mousedown; color: #ADD8E6"
+            ></a-text>
+    
+    
         
         
         <script>
