@@ -147,7 +147,7 @@ splashScreen.style.top = '0';
 splashScreen.style.left = '0';
 splashScreen.style.width = '100%';
 splashScreen.style.height = '100%';
-splashScreen.style.backgroundColor = 'rgba(0,0,0,0.7)';
+splashScreen.style.backgroundColor = 'rgba(0,0,0,0.4)';
 splashScreen.style.zIndex = '9999';
 
 // add the instructions to the splash screen
@@ -156,20 +156,25 @@ instructions.style.color = '#fff';
 instructions.style.textAlign = 'center';
 instructions.style.marginTop = '50vh';
 instructions.style.transform = 'translateY(-50%)';
-instructions.style.fontSize = '24px';
+
 instructions.style.fontWeight = 'bold';
 
 const line1 = document.createElement('p');
-line1.innerText = 'This is an interactive gallery application';
+line1.innerText = 'INTERACTIVE TOUCH SCREEN APPLICATION';
 instructions.appendChild(line1);
 
-const line2 = document.createElement('p');
-line2.innerText = '...';
+    
+const line2 = document.createElement('p2');
+line2.innerText = 'bygones, byonges is an online exhibition set in a virtual plane mirroring the physicality of the space it is designed for. By virtue of its medium, this exhibition aims to interrogate the nature of the digital archive as an assumed permanent vault that is immune to decay. This virtual exhibition can be accessed via hyperlink and QR code.';
 instructions.appendChild(line2);
 
 const line3 = document.createElement('p');
-line3.innerText = 'click anywhere to begin';
+line3.innerText = '...';
 instructions.appendChild(line3);
+    
+const line4 = document.createElement('p');
+line4.innerText = 'click anywhere to begin';
+instructions.appendChild(line4);
 
 splashScreen.appendChild(instructions);
 
@@ -186,6 +191,32 @@ splashScreen.addEventListener('click', () => {
   splashScreen.remove();
 });
 </script>
+       <style>
+           p {
+  font-size: 34px;
+  color: white;
+  animation: blink 2s linear infinite;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+               
+           }    
+           
+       p {
+  font-size: 34px;
+           color: white;
+}
+           
+        p2 {
+  font-size: 24;
+            color: white;
+}
+       </style>
        
        
     <a-scene
