@@ -376,4 +376,39 @@
 
     </a-scene>          
   </body>
+  
+   <!--REFRESH-->
+    <script>
+    // create the refresh button element
+const refreshButton = document.createElement('refresh');
+refreshButton.innerText = 'Refresh';
+refreshButton.onclick = function() {
+    location.reload();
+};
+
+// add the refresh button to the body
+document.body.appendChild(refreshButton);
+    </script>
+    
+    <style>
+    refresh {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 1.2rem;
+    padding: 0.5rem 1rem;
+    border-radius: 10px;
+    border: none;
+    background-color: #333;
+    color: #fff;
+    cursor: pointer;
+  }
+
+  refresh:hover {
+    background-color: #555;
+  }
+</style>
+  
+  
 </html>
